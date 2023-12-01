@@ -14,5 +14,6 @@ char **tokenize(const char *line);
 void free_tokens(char **tokens);
 
 void execute(char **tokens, char **envp, char *name);
+char *get_full_path(const char *command, char *envp[]);
 
 #endif

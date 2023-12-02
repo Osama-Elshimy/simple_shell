@@ -3,53 +3,50 @@
 /**
  * execute - executes a command and its arguments
  *
- * @tokens: array of tokens
- * @envp: array of environment variables
- * @name: name of shell
+ * @argv: argument vector
+ * @envp: environment vector
+ *
+ * Return: 0 on success, otherwise -1
  */
 
-void execute(char *tokens[], char *envp[], __attribute__((unused)) char *name)
+int execute(char **argv, char **envp)
 {
 	pid_t cpid;
 	int status;
-	char *full_path = get_full_path(tokens[0], envp);
+	char *path = get_exec_path(argv[0]);
 
-	if (strcmp(tokens[0], "exit") == 0)
+	if (path == NULL)
 	{
-		free_tokens(tokens);
-		exit(0);
+		string_array_free(&argv);
+		free(path);
+		return (-1);
 	}
 
-	if (full_path != NULL)
+	cpid = fork();
+	if (cpid == -1)
 	{
-		cpid = fork();
-		if (cpid == -1)
-		{
-			perror("fork");
-			free_tokens(tokens);
-			free(full_path);
-			return;
-		}
+		perror("fork");
+		string_array_free(&argv);
+		free(path);
+		return (-1);
+	}
 
-		if (cpid == 0)
+	if (cpid == 0)
+	{
+		if (execve(path, argv, envp) == -1)
 		{
-			if (execve(full_path, tokens, envp) == -1)
-			{
-				perror(full_path);
-				free_tokens(tokens);
-				exit(127);
-			}
-		}
-		else
-		{
-			wait(&status);
-			free_tokens(tokens);
-			free(full_path);
+			perror("execve");
+			string_array_free(&argv);
+			free(path);
+			return (-1);
 		}
 	}
 	else
 	{
-		fprintf(stderr, "%s: command not found: %s\n", name, tokens[0]);
-		free_tokens(tokens);
+		wait(&status);
+		string_array_free(&argv);
+		free(path);
 	}
+
+	return (0);
 }

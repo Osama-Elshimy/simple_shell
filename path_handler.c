@@ -1,51 +1,47 @@
 #include "main.h"
 
 /**
- * get_full_path - gets the full path of a command
+ * get_exec_path - gets the full path of a command
  *
  * @command: the command
- * @envp: the environment variables
  *
  * Return: the full path of the command
  */
 
-char *get_full_path(const char *command, __attribute__((unused)) char *envp[])
+char *get_exec_path(const char *command)
 {
-	char *path = getenv("PATH"), *path_copy, *token;
+	char *path_env = NULL;
+	char *path = NULL;
+	char *path_copy = NULL;
 
-	if (path == NULL)
-	{
-		fprintf(stderr, "Error: PATH environment variable not set.\n");
-		return (NULL);
-	}
-	path_copy = strdup(path);
-	if (path_copy == NULL)
+	if (access(command, X_OK) == 0)
+		return (strdup(command));
+
+	path_env = strdup(getenv("PATH"));
+	if (path_env == NULL)
 	{
 		perror("strdup");
 		return (NULL);
 	}
-	token = strtok(path_copy, ":");
-	while (token != NULL)
-	{
-		char *full_path = malloc(strlen(token) + strlen(command) + 2);
 
-		if (full_path == NULL)
+	path = strtok(path_env, ":");
+
+	while (path)
+	{
+		path_copy = strdup(path);
+		cat_string(&path_copy, "/");
+		cat_string(&path_copy, command);
+
+		if (access(path_copy, X_OK) == 0)
 		{
-			perror("malloc");
-			free(path_copy);
-			return (NULL);
+			free(path_env);
+			return (path_copy);
 		}
-		strcpy(full_path, token);
-		strcat(full_path, "/");
-		strcat(full_path, command);
-		if (access(full_path, F_OK) == 0)
-		{
-			free(path_copy);
-			return (full_path);
-		}
-		free(full_path);
-		token = strtok(NULL, ":");
+
+		free(path_copy);
+		path = strtok(NULL, ":");
 	}
-	free(path_copy);
+
+	free(path_env);
 	return (NULL);
 }

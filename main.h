@@ -9,11 +9,16 @@
 #include <unistd.h>
 
 char *get_line(void);
-
 char **tokenize(const char *line);
-void free_tokens(char **tokens);
+int execute(char **tokens, char **envp);
+char *get_exec_path(const char *command);
 
-void execute(char **tokens, char **envp, char *name);
-char *get_full_path(const char *command, char *envp[]);
+void exit_builtin(char **argv);
+int handle_command(char **argv, char **envp);
+
+void cat_string(char **dest, const char *src);
+int string_array_length(char **arr);
+void string_array_push(char ***arr, const char *str);
+void string_array_free(char ***arr);
 
 #endif

@@ -23,11 +23,11 @@ int main(int argc, char **argv, char **envp)
 
 		line = get_line();
 		tokens = tokenize(line);
-		free(line);
-		if (!tokens)
-			continue;
 
-		execute(tokens, envp, argv[0]);
+		if (handle_command(tokens, envp) == -1)
+			dprintf(STDERR_FILENO, "%s: No such file or directory\n", argv[0]);
+
+		free(line);
 	}
 
 	return (0);

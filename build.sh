@@ -10,5 +10,6 @@ if [ ! -d "$out_dir" ]; then
 	mkdir "$out_dir"
 fi
 
-betty ./*.c
+betty-doc ./*.c
+betty-style -q --no-summary ./*.c
 "$command" "${flags[@]}" "${files[@]}" -o "$out_dir"/"$exec_name"

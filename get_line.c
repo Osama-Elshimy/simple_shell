@@ -23,7 +23,5 @@ char *get_line(void)
 		exit(0);
 	}
 
-	line[strlen(line) - 1] = '\0';
-
 	return (line);
 }

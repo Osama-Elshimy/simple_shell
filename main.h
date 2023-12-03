@@ -21,4 +21,7 @@ int string_array_length(char **arr);
 void string_array_push(char ***arr, const char *str);
 void string_array_free(char ***arr);
 
+char *_strtok(char *str, char *delim);
+unsigned int is_delim(char c, char *delim);
+
 #endif

@@ -24,7 +24,7 @@ char *get_exec_path(const char *command)
 		return (NULL);
 	}
 
-	path = strtok(path_env, ":");
+	path = _strtok(path_env, ":");
 
 	while (path)
 	{
@@ -39,7 +39,7 @@ char *get_exec_path(const char *command)
 		}
 
 		free(path_copy);
-		path = strtok(NULL, ":");
+		path = _strtok(NULL, ":");
 	}
 
 	free(path_env);

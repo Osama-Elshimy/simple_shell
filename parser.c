@@ -23,12 +23,12 @@ char **tokenize(const char *line)
 		exit(1);
 	}
 
-	token = strtok(line_copy, DELIM);
+	token = _strtok(line_copy, DELIM);
 
 	while (token)
 	{
 		string_array_push(&tokens, token);
-		token = strtok(NULL, DELIM);
+		token = _strtok(NULL, DELIM);
 	}
 
 	free(line_copy);

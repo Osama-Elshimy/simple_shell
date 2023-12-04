@@ -15,18 +15,22 @@
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
+	(void)argv;
+	(void)envp;
 
 	while (true)
 	{
 		char *line = NULL;
-		char **tokens;
+		char **commands = NULL;
 
 		line = get_line();
-		tokens = tokenize(line);
+		if (line == NULL)
+			break;
 
-		if (handle_command(tokens, envp) == -1)
-			dprintf(STDERR_FILENO, "%s: No such file or directory\n", argv[0]);
+		commands = parse_commands(line);
+		handle_commands(commands, envp);
 
+		string_array_free(&commands);
 		free(line);
 	}
 

@@ -6,7 +6,7 @@
  * @argv: argument vector
  */
 
-void exit_builtin(char **argv)
+int builtin_exit(char **argv)
 {
 	int status = 0;
 
@@ -21,6 +21,6 @@ void exit_builtin(char **argv)
 		}
 	}
 
-	string_array_free(&argv);
 	exit(status);
+	return (status);
 }

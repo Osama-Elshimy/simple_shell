@@ -8,23 +8,24 @@
  * Return: void
  */
 
-void _setenv(char **argv)
+int builtin_setenv(char **argv)
 {
 	int result;
 
 	if (argv[1] == NULL || argv[2] == NULL)
 	{
 		fprintf(stderr, "setenv: Too few arguments\n");
-		string_array_free(&argv);
-		return;
+		return (1);
 	}
 
 	result = setenv(argv[1], argv[2], 1);
-
 	if (result != 0)
+	{
 		perror("setenv");
+		return (1);
+	}
 
-	string_array_free(&argv);
+	return (0);
 }
 
 /**
@@ -35,21 +36,23 @@ void _setenv(char **argv)
  * Return: void
  */
 
-void _unsetenv(char **argv)
+int builtin_unsetenv(char **argv)
 {
 	int result;
 
 	if (argv[1] == NULL)
 	{
 		fprintf(stderr, "unsetenv: Too few arguments\n");
-		string_array_free(&argv);
-		return;
+		return (1);
 	}
 
 	result = unsetenv(argv[1]);
 
 	if (result != 0)
+	{
 		perror("unsetenv");
+		return (1);
+	}
 
-	string_array_free(&argv);
+	return (0);
 }

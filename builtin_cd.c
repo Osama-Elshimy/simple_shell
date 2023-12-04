@@ -8,28 +8,33 @@
  * Return: void
  */
 
-void change_dir(char *new_dir)
+static int change_dir(char *new_dir)
 {
 	char *current_dir = getcwd(NULL, 0);
 
 	if (current_dir == NULL)
 	{
 		perror("getcwd");
-		return;
+		return (1);
 	}
 
-	if (setenv("OLDPWD", current_dir, 1) != 0)
-		perror("setenv");
+	if (chdir(new_dir) == 0)
+	{
+		if (setenv("OLDPWD", current_dir, 1) != 0)
+			perror("setenv");
 
-	else if (chdir(new_dir) != 0)
-		perror("chdir");
+		if (setenv("PWD", new_dir, 1) != 0)
+			perror("setenv");
 
-	else if (setenv("PWD", new_dir, 1) != 0)
-		perror("setenv");
-
-	/*
-	 * free(current_dir);
-	 */
+		free(current_dir);
+		return (0);
+	}
+	else
+	{
+		perror("cd");
+		free(current_dir);
+		return (1);
+	}
 }
 
 /**
@@ -38,17 +43,17 @@ void change_dir(char *new_dir)
  * Return: void
  */
 
-void cd_home(void)
+static int cd_home(void)
 {
 	char *new_dir = getenv("HOME");
 
 	if (new_dir == NULL)
 	{
 		fprintf(stderr, "cd: $HOME not set\n");
-		return;
+		return (1);
 	}
 
-	change_dir(new_dir);
+	return (change_dir(new_dir));
 }
 
 /**
@@ -57,17 +62,17 @@ void cd_home(void)
  * Return: void
  */
 
-void cd_old_dir(void)
+static int cd_old_dir(void)
 {
 	char *new_dir = getenv("OLDPWD");
 
 	if (new_dir == NULL)
 	{
 		fprintf(stderr, "cd: $OLDPWD not set\n");
-		return;
+		return (1);
 	}
 
-	change_dir(new_dir);
+	return (change_dir(new_dir));
 }
 
 /**
@@ -78,11 +83,11 @@ void cd_old_dir(void)
  * Return: void
  */
 
-void cd_args(char **argv)
+static int cd_args(char **argv)
 {
 	char *new_dir = argv[1];
 
-	change_dir(new_dir);
+	return (change_dir(new_dir));
 }
 
 /**
@@ -93,12 +98,12 @@ void cd_args(char **argv)
  * Return: void
  */
 
-void _cd(char **argv)
+int builtin_cd(char **argv)
 {
 	if (argv[1] == NULL)
-		cd_home();
+		return (cd_home());
 	else if (strcmp(argv[1], "-") == 0)
-		cd_old_dir();
+		return (cd_old_dir());
 	else
-		cd_args(argv);
+		return (cd_args(argv));
 }

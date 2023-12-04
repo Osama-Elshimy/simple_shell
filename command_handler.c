@@ -1,5 +1,30 @@
 #include "main.h"
 
+static int status;
+
+void handle_commands(char **commands, char **envp)
+{
+	if (commands == NULL || envp == NULL)
+		return;
+
+	while (*commands)
+	{
+		char **argv;
+
+		if (is_operator(*commands))
+		{
+			handle_operator(&commands, status);
+			continue;
+		}
+
+		argv = tokenize(*commands);
+		status = handle_command(argv, envp);
+		commands++;
+
+		string_array_free(&argv);
+	}
+}
+
 /**
  * handle_command - handles command
  *
@@ -11,26 +36,17 @@
 
 int handle_command(char **argv, char **envp)
 {
-	if (strcmp(argv[0], "exit") == 0)
-	{
-		exit_builtin(argv);
-		return (0);
-	}
-	else if (strcmp(argv[0], "setenv") == 0)
-	{
-		_setenv(argv);
-		return (0);
-	}
-	else if (strcmp(argv[0], "unsetenv") == 0)
-	{
-		_unsetenv(argv);
-		return (0);
-	}
-	else if (strcmp(argv[0], "cd") == 0)
-	{
-		_cd(argv);
-		return (0);
-	}
+	if (argv == NULL || envp == NULL)
+		return (-1);
 
-	return (execute(argv, envp));
+	if (strcmp(argv[0], "exit") == 0)
+		return (builtin_exit(argv));
+	else if (strcmp(argv[0], "setenv") == 0)
+		return (builtin_setenv(argv));
+	else if (strcmp(argv[0], "unsetenv") == 0)
+		return (builtin_unsetenv(argv));
+	else if (strcmp(argv[0], "cd") == 0)
+		return (builtin_cd(argv));
+	else
+		return (execute(argv, envp));
 }

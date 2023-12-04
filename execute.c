@@ -1,6 +1,52 @@
 #include "main.h"
 
 /**
+ * get_exec_path - gets the full path of a command
+ *
+ * @command: the command
+ *
+ * Return: the full path of the command
+ */
+
+char *get_exec_path(const char *command)
+{
+	char *path_env = NULL;
+	char *path = NULL;
+	char *path_copy = NULL;
+
+	if (access(command, X_OK) == 0)
+		return (strdup(command));
+
+	path_env = strdup(getenv("PATH"));
+	if (path_env == NULL)
+	{
+		perror("strdup");
+		return (NULL);
+	}
+
+	path = _strtok(path_env, ":");
+
+	while (path)
+	{
+		path_copy = strdup(path);
+		cat_string(&path_copy, "/");
+		cat_string(&path_copy, command);
+
+		if (access(path_copy, X_OK) == 0)
+		{
+			free(path_env);
+			return (path_copy);
+		}
+
+		free(path_copy);
+		path = _strtok(NULL, ":");
+	}
+
+	free(path_env);
+	return (NULL);
+}
+
+/**
  * execute - executes a command and its arguments
  *
  * @argv: argument vector
@@ -17,7 +63,6 @@ int execute(char **argv, char **envp)
 
 	if (path == NULL)
 	{
-		string_array_free(&argv);
 		free(path);
 		return (-1);
 	}
@@ -26,7 +71,6 @@ int execute(char **argv, char **envp)
 	if (cpid == -1)
 	{
 		perror("fork");
-		string_array_free(&argv);
 		free(path);
 		return (-1);
 	}
@@ -44,9 +88,12 @@ int execute(char **argv, char **envp)
 	else
 	{
 		wait(&status);
-		string_array_free(&argv);
+		if (WIFEXITED(status))
+			status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			status = WTERMSIG(status);
 		free(path);
 	}
 
-	return (0);
+	return (status);
 }

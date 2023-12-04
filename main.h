@@ -24,4 +24,9 @@ void string_array_free(char ***arr);
 char *_strtok(char *str, char *delim);
 unsigned int is_delim(char c, char *delim);
 
+void _setenv(char **argv);
+void _unsetenv(char **argv);
+
+void _cd(char **argv);
+
 #endif

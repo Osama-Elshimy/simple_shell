@@ -11,6 +11,7 @@
 /* input */
 
 char *get_line(void);
+void display_prompt(void);
 
 /* parse */
 

@@ -1,5 +1,12 @@
 #include "main.h"
 
+/**
+ * handle_operator_and - handles && operator
+ *
+ * @commands: pointer to the array of commands
+ * @status: status of the last command
+ */
+
 void handle_operator_and(char ***commands, int status)
 {
 	if (status == 0)
@@ -16,6 +23,13 @@ void handle_operator_and(char ***commands, int status)
 
 	(*commands) += 2;
 }
+
+/**
+ * handle_operator_or - handles || operator
+ *
+ * @commands: pointer to the array of commands
+ * @status: status of the last command
+ */
 
 void handle_operator_or(char ***commands, int status)
 {
@@ -34,15 +48,34 @@ void handle_operator_or(char ***commands, int status)
 	(*commands) += 2;
 }
 
+/**
+ * handle_operator_semi - handles ; operator
+ * @commands: pointer to the array of commands
+ */
+
 void handle_operator_semi(char ***commands)
 {
 	(*commands)++;
 }
 
+/**
+ * handle_operator_hash - handles # operator
+ *
+ * @commands: pointer to the array of commands
+ */
+
 void handle_operator_hash(char ***commands)
 {
-	**commands = NULL;
+	while (**commands)
+		(*commands)++;
 }
+
+/**
+ * handle_operator - handles operators
+ *
+ * @commands: pointer to the array of commands
+ * @status: status of the last command
+ */
 
 void handle_operator(char ***commands, int status)
 {

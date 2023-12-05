@@ -9,7 +9,7 @@
  * Return: true if c is a delimiter
  */
 
-unsigned int is_delim(char c, char *delim)
+static bool is_delim(char c, char *delim)
 {
 	while (*delim != '\0')
 	{
@@ -34,38 +34,31 @@ char *_strtok(char *str, char *delim)
 	static char *backup_string;
 	char *ret;
 
-	if (!str)
-		str = backup_string;
-	if (!str)
-		return (NULL);
-
-	while (true)
+	if (str == NULL)
 	{
-		if (is_delim(*str, delim))
-		{
-			str++;
-			continue;
-		}
-		if (*str == '\0')
+		str = backup_string;
+		if (str == NULL)
 			return (NULL);
-		break;
 	}
+
+	while (is_delim(*str, delim))
+		str++;
+
+	if (*str == '\0')
+		return (NULL);
 
 	ret = str;
 
-	while (true)
-	{
-		if (*str == '\0')
-		{
-			backup_string = str;
-			return (ret);
-		}
-		if (is_delim(*str, delim))
-		{
-			*str = '\0';
-			backup_string = str + 1;
-			return (ret);
-		}
+	while (*str != '\0' && !is_delim(*str, delim))
 		str++;
+
+	if (*str != '\0')
+	{
+		*str = '\0';
+		backup_string = str + 1;
 	}
+	else
+		backup_string = str;
+
+	return (ret);
 }

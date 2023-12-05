@@ -2,6 +2,14 @@
 
 #define DELIM " \n\t"
 
+/**
+ * is_operator - checks if a string is an operator
+ *
+ * @str: string to check
+ *
+ * Return: true if it is an operator, false otherwise
+ */
+
 bool is_operator(const char *str)
 {
 	char *operators[] = {"&&", "||", ";", "#"};
@@ -20,6 +28,14 @@ bool is_operator(const char *str)
 	return (false);
 }
 
+/**
+ * get_operator_type - gets operator type
+ *
+ * @str: operator string
+ *
+ * Return: operator type
+ */
+
 enum Operator get_operator_type(const char *str)
 {
 	if (strcmp(str, "&&") == 0)
@@ -34,6 +50,14 @@ enum Operator get_operator_type(const char *str)
 		return (UNDEF);
 }
 
+/**
+ * parse_commands - parses multiple commands from a line
+ *
+ * @line: line to parse
+ *
+ * Return: array of commands
+ */
+
 char **parse_commands(const char *line)
 {
 	char **commands = NULL;
@@ -43,16 +67,13 @@ char **parse_commands(const char *line)
 
 	if (line == NULL)
 		return (NULL);
-
 	line_copy = strdup(line);
 	if (line_copy == NULL)
 	{
 		perror("strdup");
 		exit(1);
 	}
-
 	token = _strtok(line_copy, DELIM);
-
 	while (token)
 	{
 		if (is_operator(token))
@@ -63,24 +84,19 @@ char **parse_commands(const char *line)
 				free(command);
 				command = NULL;
 			}
-
 			string_array_push(&commands, token);
-
 			token = _strtok(NULL, DELIM);
 			continue;
 		}
-
 		cat_string(&command, token);
 		cat_string(&command, " ");
 		token = _strtok(NULL, DELIM);
 	}
-
 	if (command != NULL)
 	{
 		string_array_push(&commands, command);
 		free(command);
 	}
-
 	free(line_copy);
 	return (commands);
 }

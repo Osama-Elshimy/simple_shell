@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * _setenv - sets an environment variable
+ * builtin_setenv - sets an environment variable
  *
  * @argv: argument vector
  *
@@ -29,7 +29,7 @@ int builtin_setenv(char **argv)
 }
 
 /**
- * _unsetenv - unsets an environment variable
+ * builtin_unsetenv - unsets an environment variable
  *
  * @argv: argument vector
  *

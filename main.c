@@ -23,6 +23,7 @@ int main(int argc, char **argv, char **envp)
 		char *line = NULL;
 		char **commands = NULL;
 
+		display_prompt();
 		line = get_line();
 		if (line == NULL)
 			break;

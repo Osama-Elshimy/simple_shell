@@ -2,6 +2,13 @@
 
 static int status;
 
+/**
+ * handle_commands - handles multiple commands
+ *
+ * @commands: array of commands
+ * @envp: environment vector
+ */
+
 void handle_commands(char **commands, char **envp)
 {
 	if (commands == NULL || envp == NULL)

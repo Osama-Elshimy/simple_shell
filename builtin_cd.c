@@ -5,7 +5,7 @@
  *
  * @new_dir: the directory to change to
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 static int change_dir(char *new_dir)
@@ -40,7 +40,7 @@ static int change_dir(char *new_dir)
 /**
  * cd_home - changes the current directory to $HOME
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 static int cd_home(void)
@@ -59,7 +59,7 @@ static int cd_home(void)
 /**
  * cd_old_dir - changes the current directory to $OLDPWD
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 static int cd_old_dir(void)
@@ -80,7 +80,7 @@ static int cd_old_dir(void)
  *
  * @argv: argument vector
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 static int cd_args(char **argv)
@@ -91,11 +91,10 @@ static int cd_args(char **argv)
 }
 
 /**
- * _cd - changes the current directory
+ * builtin_cd - changes the current directory
  *
  * @argv: argument vector
- *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 int builtin_cd(char **argv)

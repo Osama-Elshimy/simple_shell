@@ -1,9 +1,11 @@
 #include "main.h"
 
 /**
- * exit_builtin - exits the shell
+ * builtin_exit - exits the shell
  *
  * @argv: argument vector
+ *
+ * Return: exit status
  */
 
 int builtin_exit(char **argv)

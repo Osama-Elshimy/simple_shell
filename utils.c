@@ -71,25 +71,6 @@ void string_array_push(char ***arr, const char *str)
 	char **temp;
 	int len;
 
-	if (*arr == NULL)
-	{
-		*arr = malloc(sizeof(char *) * 2);
-		if (*arr == NULL)
-		{
-			perror("malloc");
-			exit(1);
-		};
-		(*arr)[0] = strdup(str);
-		if ((*arr)[0] == NULL)
-		{
-			perror("strdup");
-			free(*arr);
-			exit(1);
-		}
-		(*arr)[1] = NULL;
-		return;
-	}
-
 	len = string_array_length(*arr);
 	temp = realloc(*arr, sizeof(char *) * (len + 2));
 	if (temp == NULL)
@@ -106,6 +87,7 @@ void string_array_push(char ***arr, const char *str)
 		string_array_free(arr);
 		exit(1);
 	}
+
 	temp[len + 1] = NULL;
 	*arr = temp;
 }

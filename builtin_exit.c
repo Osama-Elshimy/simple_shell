@@ -16,7 +16,7 @@ int builtin_exit(char **argv)
 	{
 		status = atoi(argv[1]);
 
-		if (status == 0 && strcmp(argv[1], "0") != 0)
+		if (status == 0 && _strcmp(argv[1], "0") != 0)
 		{
 			fprintf(stderr, "exit: %s: numeric argument required\n", argv[1]);
 			exit(EXIT_FAILURE);

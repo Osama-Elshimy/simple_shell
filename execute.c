@@ -15,9 +15,9 @@ char *get_exec_path(const char *command)
 	char *path_copy = NULL;
 
 	if (access(command, X_OK) == 0)
-		return (strdup(command));
+		return (_strdup(command));
 
-	path_env = strdup(getenv("PATH"));
+	path_env = _strdup(getenv("PATH"));
 	if (path_env == NULL)
 	{
 		perror("strdup");
@@ -28,7 +28,7 @@ char *get_exec_path(const char *command)
 
 	while (path)
 	{
-		path_copy = strdup(path);
+		path_copy = _strdup(path);
 		cat_string(&path_copy, "/");
 		cat_string(&path_copy, command);
 

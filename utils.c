@@ -14,19 +14,19 @@ void cat_string(char **dest, const char *src)
 
 	if (*dest == NULL)
 	{
-		*dest = malloc(strlen(src) + 1);
+		*dest = malloc(_strlen(src) + 1);
 		if (*dest == NULL)
 		{
 			perror("malloc");
 			exit(1);
 		}
 
-		strcpy(*dest, src);
+		_strcpy(*dest, src);
 		return;
 	}
 
-	len = strlen(*dest) + strlen(src) + 1;
-	temp = realloc(*dest, len);
+	len = _strlen(*dest) + _strlen(src) + 1;
+	temp = _realloc(*dest, len);
 	if (temp == NULL)
 	{
 		perror("realloc");
@@ -34,7 +34,7 @@ void cat_string(char **dest, const char *src)
 		exit(1);
 	}
 
-	strcat(temp, src);
+	_strcat(temp, src);
 	*dest = temp;
 }
 
@@ -72,7 +72,7 @@ void string_array_push(char ***arr, const char *str)
 	int len;
 
 	len = string_array_length(*arr);
-	temp = realloc(*arr, sizeof(char *) * (len + 2));
+	temp = _realloc(*arr, sizeof(char *) * (len + 2));
 	if (temp == NULL)
 	{
 		perror("realloc");
@@ -80,7 +80,7 @@ void string_array_push(char ***arr, const char *str)
 		exit(1);
 	}
 
-	temp[len] = strdup(str);
+	temp[len] = _strdup(str);
 	if (temp[len] == NULL)
 	{
 		perror("strdup");

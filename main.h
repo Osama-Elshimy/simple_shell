@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +46,21 @@ int builtin_unsetenv(char **argv);
 int builtin_cd(char **argv);
 int execute(char **tokens, char **envp);
 
+/* aliases */
+
+/**
+ * struct Alias - alias
+ *
+ * @name: alias name
+ * @value: alias value
+ */
+
+typedef struct Alias
+{
+	char *name;
+	char *value;
+} Alias;
+
 /* utility */
 
 char *get_exec_path(const char *command);
@@ -53,5 +69,17 @@ int string_array_length(char **arr);
 void string_array_push(char ***arr, const char *str);
 void string_array_free(char ***arr);
 char *_strtok(char *str, char *delim);
+
+/* string functions */
+
+size_t _strlen(const char *str);
+char *_strdup(const char *src);
+char *_strcat(char *dest, const char *src);
+int _strcmp(const char *s1, const char *s2);
+char *_strcpy(char *dest, const char *src);
+
+/* memory functions */
+
+void *_realloc(void *ptr, size_t size);
 
 #endif

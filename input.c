@@ -30,7 +30,7 @@ char *get_line(void)
 
 		if (line_size % BUFFER_SIZE == 0)
 		{
-			char *temp = realloc(line, line_size + BUFFER_SIZE);
+			char *temp = _realloc(line, line_size + BUFFER_SIZE);
 
 			if (temp == NULL)
 			{

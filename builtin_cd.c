@@ -101,7 +101,7 @@ int builtin_cd(char **argv)
 {
 	if (argv[1] == NULL)
 		return (cd_home());
-	else if (strcmp(argv[1], "-") == 0)
+	else if (_strcmp(argv[1], "-") == 0)
 		return (cd_old_dir());
 	else
 		return (cd_args(argv));

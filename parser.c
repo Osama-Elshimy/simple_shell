@@ -21,7 +21,7 @@ bool is_operator(const char *str)
 
 	for (i = 0; i < len; i++)
 	{
-		if (strcmp(str, operators[i]) == 0)
+		if (_strcmp(str, operators[i]) == 0)
 			return (true);
 	}
 
@@ -38,13 +38,13 @@ bool is_operator(const char *str)
 
 enum Operator get_operator_type(const char *str)
 {
-	if (strcmp(str, "&&") == 0)
+	if (_strcmp(str, "&&") == 0)
 		return (AND);
-	else if (strcmp(str, "||") == 0)
+	else if (_strcmp(str, "||") == 0)
 		return (OR);
-	else if (strcmp(str, ";") == 0)
+	else if (_strcmp(str, ";") == 0)
 		return (SEMI);
-	else if (strcmp(str, "#") == 0)
+	else if (_strcmp(str, "#") == 0)
 		return (HASH);
 	else
 		return (UNDEF);
@@ -67,7 +67,7 @@ char **parse_commands(const char *line)
 
 	if (line == NULL)
 		return (NULL);
-	line_copy = strdup(line);
+	line_copy = _strdup(line);
 	if (line_copy == NULL)
 	{
 		perror("strdup");
@@ -118,7 +118,7 @@ char **tokenize(const char *line)
 	if (line == NULL)
 		return (NULL);
 
-	line_copy = strdup(line);
+	line_copy = _strdup(line);
 	if (line_copy == NULL)
 	{
 		perror("strdup");

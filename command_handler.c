@@ -46,13 +46,13 @@ int handle_command(char **argv, char **envp)
 	if (argv == NULL || envp == NULL)
 		return (-1);
 
-	if (strcmp(argv[0], "exit") == 0)
+	if (_strcmp(argv[0], "exit") == 0)
 		return (builtin_exit(argv));
-	else if (strcmp(argv[0], "setenv") == 0)
+	else if (_strcmp(argv[0], "setenv") == 0)
 		return (builtin_setenv(argv));
-	else if (strcmp(argv[0], "unsetenv") == 0)
+	else if (_strcmp(argv[0], "unsetenv") == 0)
 		return (builtin_unsetenv(argv));
-	else if (strcmp(argv[0], "cd") == 0)
+	else if (_strcmp(argv[0], "cd") == 0)
 		return (builtin_cd(argv));
 	else
 		return (execute(argv, envp));

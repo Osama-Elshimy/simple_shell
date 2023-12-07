@@ -1,16 +1,16 @@
 #include "main.h"
 
 /**
- * cat_string - concatenate two strings
+ * string_cat - concatenates two strings
  *
  * @dest: destination string
  * @src: source string
  */
 
-void cat_string(char **dest, const char *src)
+void string_cat(char **dest, const char *src)
 {
 	char *temp;
-	int len;
+	size_t len;
 
 	if (*dest == NULL)
 	{
@@ -39,78 +39,70 @@ void cat_string(char **dest, const char *src)
 }
 
 /**
- * string_array_length - counts the number of elements in a string array
+ * int_to_string - converts integer to string
  *
- * @arr: string array
+ * @number: integer to convert
  *
- * Return: number of elements
+ * Return: pointer to string
  */
 
-int string_array_length(char **arr)
+char *int_to_string(int number)
 {
-	int count = 0;
+	char *digits = "0123456789";
+	char *buf;
+	int len = number ? 0 : 1;
+	unsigned int i;
+	unsigned int abs_num = (number < 0) ? -number : number;
 
-	if (arr == NULL)
-		return (0);
+	if (number < 0)
+		len++;
 
-	while (arr[count] != NULL)
-		count++;
+	for (i = abs_num; i > 0; i /= 10)
+		len++;
 
-	return (count);
-}
-
-/**
- * string_array_push - adds a string to the end of a string array
- *
- * @arr: string array
- * @str: string to add
- */
-
-void string_array_push(char ***arr, const char *str)
-{
-	char **temp;
-	int len;
-
-	len = string_array_length(*arr);
-	temp = _realloc(*arr, sizeof(char *) * (len + 2));
-	if (temp == NULL)
+	buf = calloc(len + 1, sizeof(char));
+	if (buf == NULL)
 	{
-		perror("realloc");
-		string_array_free(arr);
+		perror("calloc");
 		exit(1);
 	}
 
-	temp[len] = _strdup(str);
-	if (temp[len] == NULL)
-	{
-		perror("strdup");
-		string_array_free(arr);
-		exit(1);
-	}
+	if (number < 0)
+		buf[0] = '-';
 
-	temp[len + 1] = NULL;
-	*arr = temp;
+	i = len - 1;
+
+	do {
+		buf[i--] = digits[abs_num % 10];
+		abs_num /= 10;
+	} while (abs_num > 0);
+
+	buf[len] = '\0';
+	return (buf);
 }
 
 /**
- * string_array_free - frees a string array
- *
- * @arr: string array
+ * inc_shlvl - increments shell level
  */
 
-void string_array_free(char ***arr)
+void inc_shlvl(void)
 {
-	int i;
+	char *env;
+	char *lvl;
 
-	if (arr == NULL || *arr == NULL)
-		return;
-
-	for (i = 0; (*arr)[i] != NULL; i++)
+	env = get_env("SHLVL");
+	if (env == NULL)
 	{
-		free((*arr)[i]);
-		(*arr)[i] = NULL;
+		lvl = _strdup("1");
+		if (lvl == NULL)
+		{
+			perror("strdup");
+			exit(1);
+		}
 	}
+	else
+		lvl = int_to_string(atoi(env) + 1);
 
-	free(*arr);
-	*arr = NULL;
+	set_env("SHLVL", lvl);
+	free(lvl);
 }

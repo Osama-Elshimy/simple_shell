@@ -88,8 +88,8 @@ char **parse_commands(const char *line)
 			token = _strtok(NULL, DELIM);
 			continue;
 		}
-		cat_string(&command, token);
-		cat_string(&command, " ");
+		string_cat(&command, token);
+		string_cat(&command, " ");
 		token = _strtok(NULL, DELIM);
 	}
 	if (command != NULL)

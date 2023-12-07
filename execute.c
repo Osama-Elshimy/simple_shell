@@ -17,7 +17,7 @@ char *get_exec_path(const char *command)
 	if (access(command, X_OK) == 0)
 		return (_strdup(command));
 
-	path_env = _strdup(getenv("PATH"));
+	path_env = _strdup(get_env("PATH"));
 	if (path_env == NULL)
 	{
 		perror("strdup");
@@ -29,8 +29,8 @@ char *get_exec_path(const char *command)
 	while (path)
 	{
 		path_copy = _strdup(path);
-		cat_string(&path_copy, "/");
-		cat_string(&path_copy, command);
+		string_cat(&path_copy, "/");
+		string_cat(&path_copy, command);
 
 		if (access(path_copy, X_OK) == 0)
 		{
@@ -50,12 +50,11 @@ char *get_exec_path(const char *command)
  * execute - executes a command and its arguments
  *
  * @argv: argument vector
- * @envp: environment vector
  *
  * Return: 0 on success, otherwise -1
  */
 
-int execute(char **argv, char **envp)
+int execute(char **argv)
 {
 	pid_t cpid;
 	int status;
@@ -77,7 +76,7 @@ int execute(char **argv, char **envp)
 
 	if (cpid == 0)
 	{
-		if (execve(path, argv, envp) == -1)
+		if (execve(path, argv, get_state()->env) == -1)
 		{
 			perror("execve");
 			string_array_free(&argv);

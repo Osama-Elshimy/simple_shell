@@ -6,12 +6,11 @@ static int status;
  * handle_commands - handles multiple commands
  *
  * @commands: array of commands
- * @envp: environment vector
  */
 
-void handle_commands(char **commands, char **envp)
+void handle_commands(char **commands)
 {
-	if (commands == NULL || envp == NULL)
+	if (commands == NULL)
 		return;
 
 	while (*commands)
@@ -25,9 +24,12 @@ void handle_commands(char **commands, char **envp)
 		}
 
 		argv = tokenize(*commands);
-		status = handle_command(argv, envp);
-		commands++;
+		status = handle_command(argv);
+		if (status == -1)
+			dprintf(STDERR_FILENO, "%s: No such file or directory\n",
+					get_state()->name);
 
+		commands++;
 		string_array_free(&argv);
 	}
 }
@@ -36,18 +38,19 @@ void handle_commands(char **commands, char **envp)
  * handle_command - handles command
  *
  * @argv: argument vector
- * @envp: environment vector
  *
- * Return: 0 on success, otherwise -1
+ * Return: status of command, or -1 if command is not found
  */
 
-int handle_command(char **argv, char **envp)
+int handle_command(char **argv)
 {
-	if (argv == NULL || envp == NULL)
+	if (argv == NULL)
 		return (-1);
 
 	if (_strcmp(argv[0], "exit") == 0)
 		return (builtin_exit(argv));
+	else if (_strcmp(argv[0], "env") == 0)
+		return (builtin_env());
 	else if (_strcmp(argv[0], "setenv") == 0)
 		return (builtin_setenv(argv));
 	else if (_strcmp(argv[0], "unsetenv") == 0)
@@ -55,5 +58,5 @@ int handle_command(char **argv, char **envp)
 	else if (_strcmp(argv[0], "cd") == 0)
 		return (builtin_cd(argv));
 	else
-		return (execute(argv, envp));
+		return (execute(argv));
 }

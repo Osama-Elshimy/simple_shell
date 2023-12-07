@@ -9,6 +9,17 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+/* program state */
+
+struct State
+{
+	char *name;
+	char **env;
+};
+
+struct State *get_state(void);
+void free_state();
+
 /* input */
 
 char *get_line(void);
@@ -36,15 +47,26 @@ void handle_operator_semi(char ***commands);
 void handle_operator_hash(char ***commands);
 void handle_operator(char ***commands, int status);
 
+char *_strtok(char *str, char *delim);
+
+/* env */
+
+extern char **environ;
+
+char *get_env(const char *name);
+int set_env(const char *name, const char *value);
+int unset_env(const char *name);
+
 /* commands */
 
-void handle_commands(char **commands, char **envp);
-int handle_command(char **argv, char **envp);
+void handle_commands(char **commands);
+int handle_command(char **argv);
 int builtin_exit(char **argv);
+int builtin_cd(char **argv);
+int builtin_env(void);
 int builtin_setenv(char **argv);
 int builtin_unsetenv(char **argv);
-int builtin_cd(char **argv);
-int execute(char **tokens, char **envp);
+int execute(char **argv);
 
 /* aliases */
 
@@ -61,15 +83,6 @@ typedef struct Alias
 	char *value;
 } Alias;
 
-/* utility */
-
-char *get_exec_path(const char *command);
-void cat_string(char **dest, const char *src);
-int string_array_length(char **arr);
-void string_array_push(char ***arr, const char *str);
-void string_array_free(char ***arr);
-char *_strtok(char *str, char *delim);
-
 /* string functions */
 
 size_t _strlen(const char *str);
@@ -78,8 +91,22 @@ char *_strcat(char *dest, const char *src);
 int _strcmp(const char *s1, const char *s2);
 char *_strcpy(char *dest, const char *src);
 
+/* string array functions */
+
+size_t string_array_length(char **arr);
+void string_array_push(char ***arr, const char *str);
+void string_array_remove(char ***arr, size_t index);
+char **string_array_copy(char **arr);
+void string_array_free(char ***arr);
+
 /* memory functions */
 
 void *_realloc(void *ptr, size_t size);
+
+/* utility functions */
+
+void string_cat(char **dest, const char *src);
+char *int_to_string(int num);
+void inc_shlvl(void);
 
 #endif

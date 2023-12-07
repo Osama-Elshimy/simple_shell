@@ -20,12 +20,8 @@ static int change_dir(char *new_dir)
 
 	if (chdir(new_dir) == 0)
 	{
-		if (setenv("OLDPWD", current_dir, 1) != 0)
-			perror("setenv");
-
-		if (setenv("PWD", new_dir, 1) != 0)
-			perror("setenv");
-
+		set_env("OLDPWD", current_dir);
+		set_env("PWD", new_dir);
 		free(current_dir);
 		return (0);
 	}
@@ -45,7 +41,7 @@ static int change_dir(char *new_dir)
 
 static int cd_home(void)
 {
-	char *new_dir = getenv("HOME");
+	char *new_dir = get_env("HOME");
 
 	if (new_dir == NULL)
 	{
@@ -64,7 +60,7 @@ static int cd_home(void)
 
 static int cd_old_dir(void)
 {
-	char *new_dir = getenv("OLDPWD");
+	char *new_dir = get_env("OLDPWD");
 
 	if (new_dir == NULL)
 	{
@@ -72,6 +68,7 @@ static int cd_old_dir(void)
 		return (1);
 	}
 
+	printf("%s\n", new_dir);
 	return (change_dir(new_dir));
 }
 

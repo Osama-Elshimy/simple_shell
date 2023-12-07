@@ -1,11 +1,28 @@
 #include "main.h"
 
 /**
+ * builtin_env - prints the current environment
+ *
+ * Return: 0
+ */
+
+int builtin_env(void)
+{
+	char **env = get_state()->env;
+	int i;
+
+	for (i = 0; env[i] != NULL; i++)
+		printf("%s\n", env[i]);
+
+	return (0);
+}
+
+/**
  * builtin_setenv - sets an environment variable
  *
  * @argv: argument vector
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 int builtin_setenv(char **argv)
@@ -18,12 +35,9 @@ int builtin_setenv(char **argv)
 		return (1);
 	}
 
-	result = setenv(argv[1], argv[2], 1);
+	result = set_env(argv[1], argv[2]);
 	if (result != 0)
-	{
-		perror("setenv");
 		return (1);
-	}
 
 	return (0);
 }
@@ -33,7 +47,7 @@ int builtin_setenv(char **argv)
  *
  * @argv: argument vector
  *
- * Return: void
+ * Return: 0 on success, 1 on failure
  */
 
 int builtin_unsetenv(char **argv)
@@ -46,7 +60,7 @@ int builtin_unsetenv(char **argv)
 		return (1);
 	}
 
-	result = unsetenv(argv[1]);
+	result = unset_env(argv[1]);
 
 	if (result != 0)
 	{

@@ -17,7 +17,7 @@ void handle_operator_and(char ***commands, int status)
 
 	if (*((*commands) + 1) == NULL)
 	{
-		dprintf(STDERR_FILENO, "Syntax error\n");
+		(*commands)++;
 		return;
 	}
 
@@ -41,7 +41,7 @@ void handle_operator_or(char ***commands, int status)
 
 	if (*((*commands) + 1) == NULL)
 	{
-		dprintf(STDERR_FILENO, "Syntax error\n");
+		(*commands)++;
 		return;
 	}
 
@@ -50,24 +50,13 @@ void handle_operator_or(char ***commands, int status)
 
 /**
  * handle_operator_semi - handles ; operator
+ *
  * @commands: pointer to the array of commands
  */
 
 void handle_operator_semi(char ***commands)
 {
 	(*commands)++;
-}
-
-/**
- * handle_operator_hash - handles # operator
- *
- * @commands: pointer to the array of commands
- */
-
-void handle_operator_hash(char ***commands)
-{
-	while (**commands)
-		(*commands)++;
 }
 
 /**
@@ -83,8 +72,8 @@ void handle_operator(char ***commands, int status)
 
 	if (is_operator(*(*commands + 1)))
 	{
-		dprintf(STDERR_FILENO, "Syntax error\n");
-		**commands = NULL;
+		while (**commands != NULL)
+			(*commands)++;
 		return;
 	}
 
@@ -99,11 +88,7 @@ void handle_operator(char ***commands, int status)
 		case SEMI:
 			handle_operator_semi(commands);
 			break;
-		case HASH:
-			handle_operator_hash(commands);
-			break;
 		case UNDEF:
-			(*commands)++;
-			dprintf(STDERR_FILENO, "Not implemented\n");
+			break;
 	}
 }

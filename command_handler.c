@@ -21,7 +21,7 @@ void handle_commands(char **commands)
 			continue;
 		}
 
-		argv = tokenize(*commands);
+		argv = parse_command(*commands);
 		get_state()->status = handle_command(argv);
 
 		commands++;

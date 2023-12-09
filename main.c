@@ -26,6 +26,7 @@ int main(int argc, char **argv)
 	while (true)
 	{
 		char *line = NULL;
+		char *parsed_line = NULL;
 		char **commands = NULL;
 
 		display_prompt();
@@ -33,12 +34,13 @@ int main(int argc, char **argv)
 		if (line == NULL)
 			break;
 
-		commands = parse_commands(line);
+		parsed_line = parse_string(line);
+		commands = parse_operators(parsed_line);
 		handle_commands(commands);
 
-		string_array_free(&commands);
 		free(line);
-		line = NULL;
+		free(parsed_line);
+		string_array_free(&commands);
 	}
 
 	status = state->status;

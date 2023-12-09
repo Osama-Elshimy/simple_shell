@@ -1,138 +1,128 @@
 #include "main.h"
 
-#define DELIM " \n\t"
-
 /**
- * is_operator - checks if a string is an operator
+ * parse_string - parses a string and replace variables
  *
- * @str: string to check
+ * @string: string to parse
  *
- * Return: true if it is an operator, false otherwise
+ * Return: parsed string
  */
 
-bool is_operator(const char *str)
+char *parse_string(const char *string)
 {
-	char *operators[] = {"&&", "||", ";", "#"};
-	size_t len = sizeof(operators) / sizeof(operators[0]);
-	size_t i;
+	char *parsed_comments;
+	char *parsed_variables;
 
-	if (str == NULL)
-		return (false);
+	if (string == NULL || *string == '\0')
+		return (NULL);
 
-	for (i = 0; i < len; i++)
-	{
-		if (_strcmp(str, operators[i]) == 0)
-			return (true);
-	}
+	parsed_comments = parse_comments(string);
+	if (parsed_comments == NULL)
+		return (NULL);
 
-	return (false);
+	parsed_variables = parse_variables(parsed_comments);
+
+	free(parsed_comments);
+	return (parsed_variables);
 }
 
 /**
- * get_operator_type - gets operator type
+ * parse_operators - parses operators from a string into an array of
+ * commands seperated by operators
  *
- * @str: operator string
- *
- * Return: operator type
- */
-
-enum Operator get_operator_type(const char *str)
-{
-	if (_strcmp(str, "&&") == 0)
-		return (AND);
-	else if (_strcmp(str, "||") == 0)
-		return (OR);
-	else if (_strcmp(str, ";") == 0)
-		return (SEMI);
-	else if (_strcmp(str, "#") == 0)
-		return (HASH);
-	else
-		return (UNDEF);
-}
-
-/**
- * parse_commands - parses multiple commands from a line
- *
- * @line: line to parse
+ * @string: string to parse
  *
  * Return: array of commands
  */
 
-char **parse_commands(const char *line)
+char **parse_operators(const char *string)
 {
-	char **commands = NULL;
-	char *command = NULL;
+	char **tokens = NULL;
 	char *token = NULL;
-	char *line_copy = NULL;
+	size_t i = 0;
 
-	if (line == NULL)
+	if (string == NULL)
 		return (NULL);
-	line_copy = _strdup(line);
-	if (line_copy == NULL)
+
+	while (string[i] != '\0')
 	{
-		perror("strdup");
-		exit(1);
-	}
-	token = _strtok(line_copy, DELIM);
-	while (token)
-	{
-		if (is_operator(token))
+		if (string[i] == '&' && string[i + 1] == '&')
 		{
-			if (command != NULL)
-			{
-				string_array_push(&commands, command);
-				free(command);
-				command = NULL;
-			}
-			string_array_push(&commands, token);
-			token = _strtok(NULL, DELIM);
+			push_token(&tokens, &token);
+			string_array_push(&tokens, "&&");
+			i += 2;
 			continue;
 		}
-		string_cat(&command, token);
-		string_cat(&command, " ");
-		token = _strtok(NULL, DELIM);
+		if (string[i] == '|' && string[i + 1] == '|')
+		{
+			push_token(&tokens, &token);
+			string_array_push(&tokens, "||");
+			i += 2;
+			continue;
+		}
+		if (string[i] == ';')
+		{
+			push_token(&tokens, &token);
+			string_array_push(&tokens, ";");
+			i++;
+			continue;
+		}
+		string_cat_char(&token, string[i]);
+		i++;
 	}
-	if (command != NULL)
-	{
-		string_array_push(&commands, command);
-		free(command);
-	}
-	free(line_copy);
-	return (commands);
+
+	push_token(&tokens, &token);
+	return (tokens);
 }
 
 /**
- * tokenize - tokenize a string
+ * parse_command - parses a command arguments from a string
  *
- * @line: string to tokenize
+ * @string: string to parse
  *
- * Return: array of tokens
+ * Return: array of arguments
  */
 
-char **tokenize(const char *line)
+char **parse_command(const char *string)
 {
 	char **tokens = NULL;
-	char *token;
-	char *line_copy;
+	char *token = NULL;
+	size_t i = 0;
 
-	if (line == NULL)
+	if (string == NULL)
 		return (NULL);
 
-	line_copy = _strdup(line);
-	if (line_copy == NULL)
+	while (string[i] != '\0')
 	{
-		perror("strdup");
-		exit(1);
+		if (string[i] == '\\' && string[i + 1] != '\0')
+		{
+			i++, string_cat_char(&token, string[i++]);
+			continue;
+		}
+		if (string[i] == '"' || string[i] == '\'')
+		{
+			char *string_literal = parse_delimiter(string + i, string[i]);
+
+			if (string_literal == NULL)
+			{
+				free(token), free(string_literal), string_array_free(&tokens);
+				return (NULL);
+			}
+			i += _strlen(string_literal) + 2,
+				string_cat(&token, string_literal), push_token(&tokens, &token),
+				free(string_literal);
+			continue;
+		}
+		if (isspace(string[i]))
+		{
+			push_token(&tokens, &token);
+			while (isspace(string[i]))
+				i++;
+			continue;
+		}
+		string_cat_char(&token, string[i++]);
 	}
 
-	token = _strtok(line_copy, DELIM);
-
-	while (token)
-	{
-		string_array_push(&tokens, token);
-		token = _strtok(NULL, DELIM);
-	}
-
-	free(line_copy);
+	push_token(&tokens, &token);
 	return (tokens);
 }

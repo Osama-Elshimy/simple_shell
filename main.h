@@ -18,6 +18,7 @@ struct State
 	char *name;
 	char **env;
 	int status;
+	size_t count;
 };
 
 struct State *get_state(void);
@@ -30,15 +31,21 @@ void display_prompt(void);
 
 /* parse */
 
-char **tokenize(const char *line);
-char **parse_commands(const char *line);
+char *parse_string(const char *string);
+char **parse_operators(const char *string);
+char **parse_command(const char *string);
+
+void cat_token(char **string, char **token);
+void push_token(char ***tokens, char **token);
+char *parse_comments(const char *string);
+char *parse_variables(const char *string);
+char *parse_delimiter(const char *string, char delim);
 
 enum Operator
 {
 	AND,
 	OR,
 	SEMI,
-	HASH,
 	UNDEF
 };
 
@@ -109,6 +116,7 @@ void *_realloc(void *ptr, size_t size);
 /* utility functions */
 
 void string_cat(char **dest, const char *src);
+void string_cat_char(char **dest, char src);
 char *int_to_string(int num);
 void inc_shlvl(void);
 

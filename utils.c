@@ -42,6 +42,35 @@ void string_cat(char **dest, const char *src)
 }
 
 /**
+ * string_cat_char - concatenates char to string
+ *
+ * @dest: destination string
+ * @src: char to add
+ */
+
+void string_cat_char(char **dest, char src)
+{
+	char *temp;
+	size_t len;
+
+	if (dest == NULL)
+		return;
+
+	len = _strlen(*dest) + 2;
+
+	temp = _realloc(*dest, len);
+	if (temp == NULL)
+	{
+		perror("realloc");
+		exit(1);
+	}
+
+	temp[len - 2] = src;
+	temp[len - 1] = '\0';
+	*dest = temp;
+}
+
+/**
  * int_to_string - converts integer to string
  *
  * @number: integer to convert

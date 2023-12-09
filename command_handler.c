@@ -1,7 +1,5 @@
 #include "main.h"
 
-static int status;
-
 /**
  * handle_commands - handles multiple commands
  *
@@ -19,15 +17,12 @@ void handle_commands(char **commands)
 
 		if (is_operator(*commands))
 		{
-			handle_operator(&commands, status);
+			handle_operator(&commands, get_state()->status);
 			continue;
 		}
 
 		argv = tokenize(*commands);
-		status = handle_command(argv);
-		if (status == -1)
-			dprintf(STDERR_FILENO, "%s: No such file or directory\n",
-					get_state()->name);
+		get_state()->status = handle_command(argv);
 
 		commands++;
 		string_array_free(&argv);
@@ -39,24 +34,32 @@ void handle_commands(char **commands)
  *
  * @argv: argument vector
  *
- * Return: status of command, or -1 if command is not found
+ * Return: status of command
  */
 
 int handle_command(char **argv)
 {
+	int status = 0;
+
+	get_state()->count++;
+
 	if (argv == NULL)
-		return (-1);
+		return (0);
 
 	if (_strcmp(argv[0], "exit") == 0)
-		return (builtin_exit(argv));
+		status = builtin_exit(argv);
 	else if (_strcmp(argv[0], "env") == 0)
-		return (builtin_env());
+		status = builtin_env();
 	else if (_strcmp(argv[0], "setenv") == 0)
-		return (builtin_setenv(argv));
+		status = builtin_setenv(argv);
 	else if (_strcmp(argv[0], "unsetenv") == 0)
-		return (builtin_unsetenv(argv));
+		status = builtin_unsetenv(argv);
 	else if (_strcmp(argv[0], "cd") == 0)
-		return (builtin_cd(argv));
+		status = builtin_cd(argv);
 	else
-		return (execute(argv));
+		status = execute(argv);
+
+	set_env("_", argv[string_array_length(argv) - 1]);
+
+	return (status);
 }

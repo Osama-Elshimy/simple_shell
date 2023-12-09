@@ -9,10 +9,9 @@
 int builtin_env(void)
 {
 	char **env = get_state()->env;
-	int i;
 
-	for (i = 0; env[i] != NULL; i++)
-		printf("%s\n", env[i]);
+	while (*env != NULL)
+		printf("%s\n", *env++);
 
 	return (0);
 }

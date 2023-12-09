@@ -1,5 +1,4 @@
 #include "main.h"
-#include <limits.h>
 
 /**
  * main - entry point
@@ -15,9 +14,9 @@
 int main(int argc, char **argv)
 {
 	struct State *state = get_state();
+	int status;
 
-	if (argc > 1)
-		return (0);
+	(void)argc;
 
 	state->name = argv[0];
 	state->env = string_array_copy(environ);
@@ -42,6 +41,7 @@ int main(int argc, char **argv)
 		line = NULL;
 	}
 
+	status = state->status;
 	free_state();
-	return (0);
+	return (status);
 }

@@ -1,11 +1,13 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <ctype.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -15,6 +17,7 @@ struct State
 {
 	char *name;
 	char **env;
+	int status;
 };
 
 struct State *get_state(void);

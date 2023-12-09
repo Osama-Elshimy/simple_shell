@@ -11,13 +11,17 @@
 static int get_env_index(const char *name)
 {
 	char **env = get_state()->env;
+	int name_len = _strlen(name);
 	int i;
 
 	for (i = 0; env[i] != NULL; i++)
 	{
-		int len = strchr(env[i], '=') - env[i];
+		int env_len = (strchr(env[i], '=')) - env[i];
 
-		if (strncmp(env[i], name, len) == 0)
+		if (env_len != name_len)
+			continue;
+
+		if (strncmp(env[i], name, name_len) == 0)
 			return (i);
 	}
 

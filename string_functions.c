@@ -12,7 +12,7 @@ size_t _strlen(const char *str)
 {
 	size_t length = 0;
 
-	while (str[length] != '\0')
+	while (str != NULL && str[length] != '\0')
 		length++;
 
 	return (length);
@@ -31,6 +31,9 @@ char *_strdup(const char *src)
 	char *str;
 	char *p;
 	int len = 0;
+
+	if (src == NULL)
+		return (NULL);
 
 	while (src[len])
 		len++;

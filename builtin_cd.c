@@ -5,7 +5,7 @@
  *
  * @new_dir: the directory to change to
  *
- * Return: 0 on success, 1 on failure
+ * Return: 0 on success, 2 on failure
  */
 
 static int change_dir(char *new_dir)
@@ -15,8 +15,11 @@ static int change_dir(char *new_dir)
 	if (current_dir == NULL)
 	{
 		perror("getcwd");
-		return (1);
+		exit(1);
 	}
+
+	if (new_dir == NULL)
+		new_dir = ".";
 
 	if (chdir(new_dir) == 0)
 	{
@@ -27,79 +30,49 @@ static int change_dir(char *new_dir)
 	}
 	else
 	{
-		perror("cd");
+		fprintf(stderr, "%s: %lu: cd: cant't cd to %s\n", get_state()->name,
+				get_state()->count, new_dir);
 		free(current_dir);
-		return (1);
+		return (2);
 	}
-}
-
-/**
- * cd_home - changes the current directory to $HOME
- *
- * Return: 0 on success, 1 on failure
- */
-
-static int cd_home(void)
-{
-	char *new_dir = get_env("HOME");
-
-	if (new_dir == NULL)
-	{
-		fprintf(stderr, "cd: $HOME not set\n");
-		return (1);
-	}
-
-	return (change_dir(new_dir));
 }
 
 /**
  * cd_old_dir - changes the current directory to $OLDPWD
  *
- * Return: 0 on success, 1 on failure
+ * Return: 0 on success, 2 on failure
  */
 
 static int cd_old_dir(void)
 {
-	char *new_dir = get_env("OLDPWD");
+	char *old_dir = get_env("OLDPWD");
 
-	if (new_dir == NULL)
+	if (old_dir == NULL)
 	{
-		fprintf(stderr, "cd: $OLDPWD not set\n");
-		return (1);
+		char *current_dir = get_env("PWD");
+
+		set_env("OLDPWD", current_dir);
+		old_dir = current_dir;
 	}
 
-	printf("%s\n", new_dir);
-	return (change_dir(new_dir));
-}
-
-/**
- * cd_args - changes the current directory to the argument
- *
- * @argv: argument vector
- *
- * Return: 0 on success, 1 on failure
- */
-
-static int cd_args(char **argv)
-{
-	char *new_dir = argv[1];
-
-	return (change_dir(new_dir));
+	printf("%s\n", old_dir);
+	return (change_dir(old_dir));
 }
 
 /**
  * builtin_cd - changes the current directory
  *
  * @argv: argument vector
- * Return: 0 on success, 1 on failure
+ *
+ * Return: 0 on success, 2 on failure
  */
 
 int builtin_cd(char **argv)
 {
 	if (argv[1] == NULL)
-		return (cd_home());
+		return (change_dir(get_env("HOME")));
 	else if (_strcmp(argv[1], "-") == 0)
 		return (cd_old_dir());
 	else
-		return (cd_args(argv));
+		return (change_dir(argv[1]));
 }

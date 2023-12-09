@@ -12,6 +12,9 @@ void string_cat(char **dest, const char *src)
 	char *temp;
 	size_t len;
 
+	if (src == NULL)
+		return;
+
 	if (*dest == NULL)
 	{
 		*dest = malloc(_strlen(src) + 1);
@@ -72,7 +75,9 @@ char *int_to_string(int number)
 
 	i = len - 1;
 
+	/* clang-format off */
 	do {
+		/* clang-format on */
 		buf[i--] = digits[abs_num % 10];
 		abs_num /= 10;
 	} while (abs_num > 0);

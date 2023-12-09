@@ -17,6 +17,8 @@ static void init_state(void)
 
 	state->name = NULL;
 	state->env = NULL;
+	state->status = 0;
+	state->count = 0;
 }
 
 /**

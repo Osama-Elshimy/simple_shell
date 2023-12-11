@@ -25,89 +25,64 @@ void cat_token(char **string, char **token)
 
 void push_token(char ***tokens, char **token)
 {
+	char *trimmed = NULL;
+
 	if (*token == NULL)
 		return;
 
-	string_array_push(tokens, *token);
+	trimmed = trim_whitespace(*token);
+	string_array_push(tokens, trimmed);
 	free(*token);
 	*token = NULL;
 }
 
 /**
- * parse_comments - parses comments from a string
+ * cut_first_token - cuts the first token from a string
  *
- * @string: string to parse
+ * @string: string
  *
- * Return: parsed string
+ * Return: token
  */
 
-char *parse_comments(const char *string)
+char *cut_first_token(char *string)
 {
-	char *parsed_string = NULL;
-	size_t i = 0;
+	char *token = NULL;
+	char *string_copy = NULL;
+	char *cut_string = NULL;
 
-	while (string[i] != '\0')
-	{
-		if (string[i] == '#' &&
-			(_strlen(parsed_string) == 0 || isspace(string[i - 1])))
-			break;
+	if (string == NULL)
+		return (NULL);
 
-		string_cat_char(&parsed_string, string[i++]);
-	}
+	string_copy = _strdup(string);
+	token = _strtok(string_copy, " \t\n");
 
-	return (parsed_string);
+	cut_string = _strdup(string + _strlen(token));
+
+	free(string_copy);
+	return (cut_string);
 }
 
 /**
- * parse_variables - parses and expands variables in a string
+ * get_first_token - gets the first token from a string
  *
- * @string: string to parse
+ * @string: string
  *
- * Return: parsed string
+ * Return: token
  */
 
-char *parse_variables(const char *string)
+char *get_first_token(char *string)
 {
-	char *parsed_string = NULL;
-	char *var = NULL;
-	size_t i = 0;
+	char *string_copy = NULL;
+	char *token = NULL;
 
-	while (string[i] != '\0')
-	{
-		if (string[i] == '$' && string[i + 1] == '?')
-		{
-			var = int_to_string(get_state()->status);
-			cat_token(&parsed_string, &var);
-			i += 2;
-			continue;
-		}
-		if (string[i] == '$' && string[i + 1] == '$')
-		{
-			var = int_to_string(getpid());
-			cat_token(&parsed_string, &var);
-			i += 2;
-			continue;
-		}
-		if (string[i] == '$' &&
-			(!isspace(string[i + 1]) && string[i + 1] != '\0'))
-		{
-			i++;
+	if (string == NULL)
+		return (NULL);
 
-			while (!isspace(string[i]) && string[i] != '\0' && string[i] != '$')
-				string_cat_char(&var, string[i++]);
+	string_copy = _strdup(string);
+	token = _strdup(_strtok(string_copy, " \t\n"));
 
-			if (var != NULL)
-			{
-				string_cat(&parsed_string, get_env(var));
-				free(var);
-				var = NULL;
-			}
-			continue;
-		}
-		string_cat_char(&parsed_string, string[i++]);
-	}
-
-	return (parsed_string);
+	free(string_copy);
+	return (token);
 }
 
 /**
@@ -128,7 +103,10 @@ char *parse_delimiter(const char *string, char delim)
 	delimiter_end = strchr(string, delim);
 
 	if (delimiter_end == NULL)
+	{
+		fprintf(stderr, "Syntax Error: Unmatched delimiter %c\n", delim);
 		return (NULL);
+	}
 
 	if (string == delimiter_end)
 		string_cat_char(&parsed_delimter, '\0');

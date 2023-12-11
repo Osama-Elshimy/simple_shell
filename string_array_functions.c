@@ -118,7 +118,7 @@ void string_array_remove(char ***arr, size_t index)
 
 void string_array_free(char ***arr)
 {
-	int i;
+	size_t i;
 
 	if (arr == NULL || *arr == NULL)
 		return;

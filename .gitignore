@@ -1,3 +1,4 @@
 build
 play_around/
 .tests
+.cache

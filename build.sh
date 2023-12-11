@@ -12,4 +12,5 @@ fi
 
 betty-doc ./*.c
 betty-style -q --no-summary ./*.c
+
 "$command" "${flags[@]}" "${files[@]}" -o "$out_dir"/"$exec_name"

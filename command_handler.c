@@ -56,6 +56,8 @@ int handle_command(char **argv)
 		status = builtin_unsetenv(argv);
 	else if (_strcmp(argv[0], "cd") == 0)
 		status = builtin_cd(argv);
+	else if (_strcmp(argv[0], "alias") == 0)
+		status = builtin_alias(argv);
 	else
 		status = execute(argv);
 

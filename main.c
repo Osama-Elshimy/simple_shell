@@ -8,7 +8,7 @@
  * @argc: argument count
  * @argv: argument vector
  *
- * Return: 0
+ * Return: status
  */
 
 int main(int argc, char **argv)
@@ -23,25 +23,8 @@ int main(int argc, char **argv)
 
 	inc_shlvl();
 
-	while (true)
-	{
-		char *line = NULL;
-		char *parsed_line = NULL;
-		char **commands = NULL;
-
-		display_prompt();
-		line = get_line();
-		if (line == NULL)
-			break;
-
-		parsed_line = parse_string(line);
-		commands = parse_operators(parsed_line);
-		handle_commands(commands);
-
-		free(line);
-		free(parsed_line);
-		string_array_free(&commands);
-	}
+	while (handle_input() == 0)
+		;
 
 	status = state->status;
 	free_state();

@@ -63,3 +63,36 @@ void display_prompt(void)
 		fflush(stdout);
 	}
 }
+
+/**
+ * handle_input - handles input
+ *
+ * Return: 0 on success, 1 on EOF
+ */
+
+int handle_input(void)
+{
+	char *line = NULL;
+	char *parsed_aliases = NULL;
+	char *parsed_comments = NULL;
+	char *parsed_variables = NULL;
+	char **commands = NULL;
+
+	display_prompt();
+	line = get_line();
+	if (line == NULL)
+		return (1);
+
+	parsed_aliases = parse_aliases(line);
+	parsed_comments = parse_comments(parsed_aliases);
+	parsed_variables = parse_variables(parsed_comments);
+	commands = parse_operators(parsed_variables);
+	handle_commands(commands);
+
+	free(line);
+	free(parsed_aliases);
+	free(parsed_comments);
+	free(parsed_variables);
+	string_array_free(&commands);
+	return (0);
+}

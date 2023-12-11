@@ -17,6 +17,7 @@ static void init_state(void)
 
 	state->name = NULL;
 	state->env = NULL;
+	state->aliases = NULL;
 	state->status = 0;
 	state->count = 0;
 }
@@ -48,6 +49,9 @@ void free_state(void)
 
 	if (state->env != NULL)
 		string_array_free(&state->env);
+
+	if (state->aliases != NULL)
+		string_array_free(&state->aliases);
 
 	free(state);
 	state = NULL;

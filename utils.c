@@ -140,3 +140,30 @@ void inc_shlvl(void)
 	set_env("SHLVL", lvl);
 	free(lvl);
 }
+
+/**
+ * trim_whitespace - trims whitespace
+ *
+ * @str: string
+ *
+ * Return: trimmed string
+ */
+
+char *trim_whitespace(char *str)
+{
+	char *end;
+
+	while (isspace(*str))
+		str++;
+
+	if (*str == '\0')
+		return (str);
+
+	end = str + _strlen(str) - 1;
+	while (end > str && isspace(*end))
+		end--;
+
+	*(end + 1) = '\0';
+
+	return (str);
+}

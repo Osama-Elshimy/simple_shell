@@ -19,7 +19,6 @@ int builtin_exit(char **argv)
 			fprintf(stderr, "%s: %lu: exit: Illegal number: %s\n",
 					get_state()->name, get_state()->count, argv[1]);
 
-			get_state()->status = 2;
 			return (2);
 		}
 

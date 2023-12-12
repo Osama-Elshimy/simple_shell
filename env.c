@@ -1,54 +1,6 @@
 #include "main.h"
 
 /**
- * get_env_index - gets the index of variable
- *
- * @name: name of variable
- *
- * Return: index of variable or -1
- */
-
-static int get_env_index(const char *name)
-{
-	char **env = get_state()->env;
-	int name_len = _strlen(name);
-	int i;
-
-	for (i = 0; env[i] != NULL; i++)
-	{
-		int env_len = (strchr(env[i], '=')) - env[i];
-
-		if (env_len != name_len)
-			continue;
-
-		if (strncmp(env[i], name, name_len) == 0)
-			return (i);
-	}
-
-	return (-1);
-}
-
-/**
- * assemble_env - assembles env variable
- *
- * @name: name of variable
- * @value: value of variable
- *
- * Return: assembled variable
- */
-
-static char *assemble_env(const char *name, const char *value)
-{
-	char *env = NULL;
-
-	string_cat(&env, name);
-	string_cat(&env, "=");
-	string_cat(&env, value);
-
-	return (env);
-}
-
-/**
  * get_env - gets value of env variable
  *
  * @name: name of variable
@@ -82,7 +34,7 @@ int set_env(const char *name, const char *value)
 	int env_index = get_env_index(name);
 	char *new_env;
 
-	if (name == NULL || strlen(name) == 0 || strchr(name, '=') != NULL)
+	if (!is_valid_env(name) || value == NULL)
 		return (-1);
 
 	new_env = assemble_env(name, value);
@@ -111,7 +63,7 @@ int unset_env(const char *name)
 {
 	int env_index = get_env_index(name);
 
-	if (name == NULL || strlen(name) == 0 || strchr(name, '=') != NULL)
+	if (!is_valid_env(name))
 		return (-1);
 
 	if (env_index == -1)

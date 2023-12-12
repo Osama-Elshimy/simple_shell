@@ -5,7 +5,7 @@
  *
  * @new_dir: the directory to change to
  *
- * Return: 0 on success, 2 on failure
+ * Return: status
  */
 
 static int change_dir(char *new_dir)
@@ -30,7 +30,7 @@ static int change_dir(char *new_dir)
 	}
 	else
 	{
-		fprintf(stderr, "%s: %lu: cd: cant't cd to %s\n", get_state()->name,
+		fprintf(stderr, "%s: %lu: cd: can't cd to %s\n", get_state()->name,
 				get_state()->count, new_dir);
 		free(current_dir);
 		return (2);
@@ -40,7 +40,7 @@ static int change_dir(char *new_dir)
 /**
  * cd_old_dir - changes the current directory to $OLDPWD
  *
- * Return: 0 on success, 2 on failure
+ * Return: status
  */
 
 static int cd_old_dir(void)
@@ -64,7 +64,7 @@ static int cd_old_dir(void)
  *
  * @argv: argument vector
  *
- * Return: 0 on success, 2 on failure
+ * Return: status
  */
 
 int builtin_cd(char **argv)

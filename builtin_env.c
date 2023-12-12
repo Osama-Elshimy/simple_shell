@@ -3,7 +3,7 @@
 /**
  * builtin_env - prints the current environment
  *
- * Return: 0
+ * Return: status
  */
 
 int builtin_env(void)
@@ -21,7 +21,7 @@ int builtin_env(void)
  *
  * @argv: argument vector
  *
- * Return: 0 on success, 1 on failure
+ * Return: status
  */
 
 int builtin_setenv(char **argv)
@@ -36,7 +36,10 @@ int builtin_setenv(char **argv)
 
 	result = set_env(argv[1], argv[2]);
 	if (result != 0)
-		return (1);
+	{
+		fprintf(stderr, "setenv: Invalid variable name\n");
+		return (2);
+	}
 
 	return (0);
 }
@@ -46,7 +49,7 @@ int builtin_setenv(char **argv)
  *
  * @argv: argument vector
  *
- * Return: 0 on success, 1 on failure
+ * Return: status
  */
 
 int builtin_unsetenv(char **argv)
@@ -60,11 +63,10 @@ int builtin_unsetenv(char **argv)
 	}
 
 	result = unset_env(argv[1]);
-
 	if (result != 0)
 	{
-		perror("unsetenv");
-		return (1);
+		fprintf(stderr, "unsetenv: Invalid variable name\n");
+		return (2);
 	}
 
 	return (0);

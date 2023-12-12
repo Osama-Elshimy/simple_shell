@@ -47,7 +47,7 @@ int get_env_index(const char *name)
 		if (env_len != name_len)
 			continue;
 
-		if (strncmp(env[i], name, name_len) == 0)
+		if (_strncmp(env[i], name, name_len) == 0)
 			return (i);
 	}
 

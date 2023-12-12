@@ -24,7 +24,7 @@ int get_alias_index(const char *name)
 		if (alias_len != name_len)
 			continue;
 
-		if (strncmp(aliases[i], name, name_len) == 0)
+		if (_strncmp(aliases[i], name, name_len) == 0)
 			return (i);
 	}
 

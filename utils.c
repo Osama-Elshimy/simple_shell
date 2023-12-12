@@ -92,7 +92,7 @@ char *int_to_string(int number)
 	for (i = abs_num; i > 0; i /= 10)
 		len++;
 
-	buf = calloc(len + 1, sizeof(char));
+	buf = _calloc(len + 1, sizeof(char));
 	if (buf == NULL)
 	{
 		perror("calloc");
@@ -135,7 +135,7 @@ void inc_shlvl(void)
 		}
 	}
 	else
-		lvl = int_to_string(atoi(env) + 1);
+		lvl = int_to_string(_atoi(env) + 1);
 
 	set_env("SHLVL", lvl);
 	free(lvl);

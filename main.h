@@ -17,6 +17,19 @@
 
 /* program state */
 
+/**
+ * struct State - program state
+ *
+ * @name: program name
+ * @prompt: program prompt
+ * @fd: program file descriptor
+ * @count: number of commands
+ * @status: program exit status
+ * @env: program environment
+ * @aliases: program aliases
+ *
+ */
+
 struct State
 {
 	char *name;
@@ -50,6 +63,16 @@ void push_token(char ***tokens, char **token);
 char *get_first_token(char *string);
 char *cut_first_token(char *string);
 char *parse_delimiter(const char *string, char delim);
+
+/**
+ * enum Operator - operator types
+ *
+ * @AND: &&
+ * @OR: ||
+ * @SEMI: ;
+ * @UNDEF: undefined
+ *
+ */
 
 enum Operator
 {
@@ -108,6 +131,8 @@ char *_strdup(const char *src);
 char *_strcat(char *dest, const char *src);
 int _strcmp(const char *s1, const char *s2);
 char *_strcpy(char *dest, const char *src);
+int _atoi(char *s);
+int _strncmp(const char *str1, const char *str2, size_t n);
 
 /* string array functions */
 
@@ -121,6 +146,7 @@ void string_array_free(char ***arr);
 /* memory functions */
 
 void *_realloc(void *ptr, size_t size);
+void *_calloc(unsigned int nmemb, unsigned int size);
 
 /* utility functions */
 

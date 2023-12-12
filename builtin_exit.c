@@ -12,7 +12,7 @@ int builtin_exit(char **argv)
 {
 	if (argv[1] != NULL)
 	{
-		int status = atoi(argv[1]);
+		int status = _atoi(argv[1]);
 
 		if (status == 0 && _strcmp(argv[1], "0") != 0)
 		{

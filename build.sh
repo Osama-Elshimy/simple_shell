@@ -10,7 +10,14 @@ if [ ! -d "$out_dir" ]; then
 	mkdir "$out_dir"
 fi
 
-betty-doc ./*.c
-betty-style -q --no-summary ./*.c
+betty_doc=$(betty-doc ./*.c)
+if [ $? -ne 0 ]; then
+	echo "$betty_doc"
+fi
+
+betty_style=$(betty-style -q --no-summary ./*.c)
+if [ $? -ne 0 ]; then
+	echo "$betty_style"
+fi
 
 "$command" "${flags[@]}" "${files[@]}" -o "$out_dir"/"$exec_name"

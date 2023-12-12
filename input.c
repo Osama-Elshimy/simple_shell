@@ -1,16 +1,16 @@
 #include "main.h"
 
-#define BUFFER_SIZE 1024
-
 /**
  * get_line - get line from stdin
+ *
+ * @fd: file descriptor
  *
  * Return: pointer to line
  */
 
-char *get_line(void)
+char *get_line(int fd)
 {
-	static char buffer[BUFFER_SIZE];
+	static char buffer[GET_LINE_BUFFER_SIZE];
 	static size_t buffer_index;
 	static size_t bytes_read;
 	char *line = NULL;
@@ -21,16 +21,16 @@ char *get_line(void)
 	{
 		if (buffer_index == bytes_read)
 		{
-			bytes_read = read(STDIN_FILENO, buffer, BUFFER_SIZE);
+			bytes_read = read(fd, buffer, GET_LINE_BUFFER_SIZE);
 			buffer_index = 0;
 
 			if (bytes_read == 0)
 				return (line_size > 0 ? line : NULL);
 		}
 
-		if (line_size % BUFFER_SIZE == 0)
+		if (line_size % GET_LINE_BUFFER_SIZE == 0)
 		{
-			char *temp = _realloc(line, line_size + BUFFER_SIZE);
+			char *temp = _realloc(line, line_size + GET_LINE_BUFFER_SIZE);
 
 			if (temp == NULL)
 			{
@@ -57,7 +57,7 @@ char *get_line(void)
 
 void display_prompt(void)
 {
-	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO) && get_state()->prompt != NULL)
 	{
 		printf("$ ");
 		fflush(stdout);
@@ -65,12 +65,12 @@ void display_prompt(void)
 }
 
 /**
- * handle_input - handles input
+ * handle_input - handles input string
  *
- * Return: 0 on success, 1 on EOF
+ * Return: true on success, false on EOF
  */
 
-int handle_input(void)
+bool handle_input(void)
 {
 	char *line = NULL;
 	char *parsed_aliases = NULL;
@@ -79,9 +79,9 @@ int handle_input(void)
 	char **commands = NULL;
 
 	display_prompt();
-	line = get_line();
+	line = get_line(get_state()->fd);
 	if (line == NULL)
-		return (1);
+		return (false);
 
 	parsed_aliases = parse_aliases(line);
 	parsed_comments = parse_comments(parsed_aliases);
@@ -94,5 +94,5 @@ int handle_input(void)
 	free(parsed_comments);
 	free(parsed_variables);
 	string_array_free(&commands);
-	return (0);
+	return (true);
 }

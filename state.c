@@ -16,10 +16,12 @@ static void init_state(void)
 	}
 
 	state->name = NULL;
-	state->env = NULL;
-	state->aliases = NULL;
+	state->prompt = NULL;
+	state->fd = -1;
 	state->status = 0;
 	state->count = 0;
+	state->env = NULL;
+	state->aliases = NULL;
 }
 
 /**
@@ -46,6 +48,10 @@ void free_state(void)
 		return;
 
 	state->name = NULL;
+	state->prompt = NULL;
+	state->fd = -1;
+	state->status = 0;
+	state->count = 0;
 
 	if (state->env != NULL)
 		string_array_free(&state->env);

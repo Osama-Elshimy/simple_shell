@@ -16,14 +16,27 @@ int main(int argc, char **argv)
 	struct State *state = get_state();
 	int status;
 
-	(void)argc;
+	if (argc >= 2)
+	{
+		state->fd = open(argv[1], O_RDONLY);
+		if (state->fd == -1)
+		{
+			fprintf(stdout, "%s: 0: Can't open %s\n", argv[0], argv[1]);
+			free_state();
+			return (127);
+		}
+	}
+	else
+	{
+		state->fd = STDIN_FILENO;
+		state->prompt = PROMPT;
+	}
 
 	state->name = argv[0];
 	state->env = string_array_copy(environ);
-
 	inc_shlvl();
 
-	while (handle_input() == 0)
+	while (handle_input())
 		;
 
 	status = state->status;

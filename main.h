@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <ctype.h>
+#include <fcntl.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -11,15 +12,20 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#define PROMPT "$ "
+#define GET_LINE_BUFFER_SIZE 1024
+
 /* program state */
 
 struct State
 {
 	char *name;
+	char *prompt;
+	int fd;
+	size_t count;
+	int status;
 	char **env;
 	char **aliases;
-	int status;
-	size_t count;
 };
 
 struct State *get_state(void);
@@ -27,9 +33,9 @@ void free_state(void);
 
 /* input */
 
-char *get_line(void);
+char *get_line(int fd);
 void display_prompt(void);
-int handle_input(void);
+bool handle_input(void);
 
 /* parse */
 

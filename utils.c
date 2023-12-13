@@ -17,19 +17,19 @@ void string_cat(char **dest, const char *src)
 
 	if (*dest == NULL)
 	{
-		*dest = malloc(_strlen(src) + 1);
+		*dest = malloc(strlen(src) + 1);
 		if (*dest == NULL)
 		{
 			perror("malloc");
 			exit(1);
 		}
 
-		_strcpy(*dest, src);
+		strcpy(*dest, src);
 		return;
 	}
 
-	len = _strlen(*dest) + _strlen(src) + 1;
-	temp = _realloc(*dest, len);
+	len = strlen(*dest) + strlen(src) + 1;
+	temp = realloc(*dest, len);
 	if (temp == NULL)
 	{
 		perror("realloc");
@@ -37,7 +37,7 @@ void string_cat(char **dest, const char *src)
 		exit(1);
 	}
 
-	_strcat(temp, src);
+	strcat(temp, src);
 	*dest = temp;
 }
 
@@ -56,9 +56,9 @@ void string_cat_char(char **dest, char src)
 	if (dest == NULL)
 		return;
 
-	len = _strlen(*dest) + 2;
+	len = *dest == NULL ? 2 : strlen(*dest) + 2;
 
-	temp = _realloc(*dest, len);
+	temp = realloc(*dest, len);
 	if (temp == NULL)
 	{
 		perror("realloc");
@@ -92,7 +92,7 @@ char *int_to_string(int number)
 	for (i = abs_num; i > 0; i /= 10)
 		len++;
 
-	buf = _calloc(len + 1, sizeof(char));
+	buf = calloc(len + 1, sizeof(char));
 	if (buf == NULL)
 	{
 		perror("calloc");
@@ -116,32 +116,6 @@ char *int_to_string(int number)
 }
 
 /**
- * inc_shlvl - increments shell level
- */
-
-void inc_shlvl(void)
-{
-	char *env;
-	char *lvl;
-
-	env = get_env("SHLVL");
-	if (env == NULL)
-	{
-		lvl = _strdup("1");
-		if (lvl == NULL)
-		{
-			perror("strdup");
-			exit(1);
-		}
-	}
-	else
-		lvl = int_to_string(_atoi(env) + 1);
-
-	set_env("SHLVL", lvl);
-	free(lvl);
-}
-
-/**
  * trim_whitespace - trims whitespace
  *
  * @str: string
@@ -159,7 +133,7 @@ char *trim_whitespace(char *str)
 	if (*str == '\0')
 		return (str);
 
-	end = str + _strlen(str) - 1;
+	end = str + strlen(str) - 1;
 	while (end > str && isspace(*end))
 		end--;
 

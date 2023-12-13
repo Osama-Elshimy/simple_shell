@@ -35,7 +35,7 @@ static void print_aliases(void)
 
 	while (*aliases != NULL)
 	{
-		char *alias = _strdup(*aliases);
+		char *alias = strdup(*aliases);
 		char *name = _strtok(alias, "=");
 
 		print_alias(name);
@@ -66,7 +66,7 @@ int builtin_alias(char **argv)
 
 	for (i = 1; i < argc; i++)
 	{
-		char *arg = _strdup(argv[i]);
+		char *arg = strdup(argv[i]);
 		char *eq = strchr(arg, '=');
 		char *name = _strtok(arg, "=");
 		char *value = _strtok(NULL, "=");

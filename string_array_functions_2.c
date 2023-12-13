@@ -18,7 +18,7 @@ bool string_array_contains(char **arr, const char *string)
 
 	for (i = 0; arr[i] != NULL; i++)
 	{
-		if (_strcmp(arr[i], string) == 0)
+		if (strcmp(arr[i], string) == 0)
 			return (true);
 	}
 

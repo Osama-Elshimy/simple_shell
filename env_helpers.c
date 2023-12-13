@@ -12,7 +12,7 @@ bool is_valid_env(const char *name)
 {
 	size_t i;
 
-	if (name == NULL || isdigit(name[0]) || _strlen(name) == 0 ||
+	if (name == NULL || isdigit(name[0]) || strlen(name) == 0 ||
 		strchr(name, '=') != NULL)
 		return (false);
 
@@ -34,7 +34,7 @@ bool is_valid_env(const char *name)
 int get_env_index(const char *name)
 {
 	char **env = get_state()->env;
-	int name_len = _strlen(name);
+	int name_len = strlen(name);
 	int i;
 
 	if (env == NULL)
@@ -47,7 +47,7 @@ int get_env_index(const char *name)
 		if (env_len != name_len)
 			continue;
 
-		if (_strncmp(env[i], name, name_len) == 0)
+		if (strncmp(env[i], name, name_len) == 0)
 			return (i);
 	}
 

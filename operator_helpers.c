@@ -19,7 +19,7 @@ bool is_operator(const char *str)
 
 	for (i = 0; i < len; i++)
 	{
-		if (_strcmp(str, operators[i]) == 0)
+		if (strcmp(str, operators[i]) == 0)
 			return (true);
 	}
 
@@ -36,11 +36,11 @@ bool is_operator(const char *str)
 
 enum Operator get_operator_type(const char *str)
 {
-	if (_strcmp(str, "&&") == 0)
+	if (strcmp(str, "&&") == 0)
 		return (AND);
-	else if (_strcmp(str, "||") == 0)
+	else if (strcmp(str, "||") == 0)
 		return (OR);
-	else if (_strcmp(str, ";") == 0)
+	else if (strcmp(str, ";") == 0)
 		return (SEMI);
 	else
 		return (UNDEF);

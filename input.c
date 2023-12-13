@@ -30,7 +30,7 @@ char *get_line(int fd)
 
 		if (line_size % GET_LINE_BUFFER_SIZE == 0)
 		{
-			char *temp = _realloc(line, line_size + GET_LINE_BUFFER_SIZE);
+			char *temp = realloc(line, line_size + GET_LINE_BUFFER_SIZE);
 
 			if (temp == NULL)
 			{
@@ -52,14 +52,25 @@ char *get_line(int fd)
 }
 
 /**
+ * is_interactive - check if stdin is interactive
+ *
+ * Return: true if interactive, false otherwise
+ */
+
+static bool is_interactive(void)
+{
+	return (isatty(STDIN_FILENO) && get_state()->prompt != NULL);
+}
+
+/**
  * display_prompt - displays prompt
  */
 
 void display_prompt(void)
 {
-	if (isatty(STDIN_FILENO) && get_state()->prompt != NULL)
+	if (is_interactive())
 	{
-		printf("$ ");
+		printf("%s", get_state()->prompt);
 		fflush(stdout);
 	}
 }
@@ -76,23 +87,27 @@ bool handle_input(void)
 	char *parsed_aliases = NULL;
 	char *parsed_comments = NULL;
 	char *parsed_variables = NULL;
-	char **commands = NULL;
 
 	display_prompt();
 	line = get_line(get_state()->fd);
 	if (line == NULL)
+	{
+		if (is_interactive())
+			printf("\n");
 		return (false);
+	}
 
 	parsed_aliases = parse_aliases(line);
 	parsed_comments = parse_comments(parsed_aliases);
 	parsed_variables = parse_variables(parsed_comments);
-	commands = parse_operators(parsed_variables);
-	handle_commands(commands);
+	get_state()->commands = parse_operators(parsed_variables);
 
 	free(line);
 	free(parsed_aliases);
 	free(parsed_comments);
 	free(parsed_variables);
-	string_array_free(&commands);
+
+	handle_commands(get_state()->commands);
+	string_array_free(&get_state()->commands);
 	return (true);
 }

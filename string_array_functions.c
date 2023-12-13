@@ -33,8 +33,11 @@ void string_array_push(char ***arr, const char *str)
 	char **temp;
 	size_t len;
 
+	if (arr == NULL || str == NULL)
+		return;
+
 	len = string_array_length(*arr);
-	temp = _realloc(*arr, sizeof(char *) * (len + 2));
+	temp = realloc(*arr, sizeof(char *) * (len + 2));
 	if (temp == NULL)
 	{
 		perror("realloc");
@@ -42,7 +45,7 @@ void string_array_push(char ***arr, const char *str)
 		exit(1);
 	}
 
-	temp[len] = _strdup(str);
+	temp[len] = strdup(str);
 	if (temp[len] == NULL)
 	{
 		perror("strdup");
@@ -100,11 +103,11 @@ void string_array_remove(char ***arr, size_t index)
 	for (i = index; i < len; i++)
 		(*arr)[i] = (*arr)[i + 1];
 
-	temp = _realloc(*arr, sizeof(char *) * (len));
+	temp = realloc(*arr, sizeof(char *) * (len));
 	if (temp == NULL)
 	{
 		perror("realloc");
-		return;
+		exit(1);
 	}
 
 	*arr = temp;

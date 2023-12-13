@@ -22,6 +22,7 @@ static void init_state(void)
 	state->count = 0;
 	state->env = NULL;
 	state->aliases = NULL;
+	state->commands = NULL;
 }
 
 /**
@@ -55,9 +56,10 @@ void free_state(void)
 
 	if (state->env != NULL)
 		string_array_free(&state->env);
-
 	if (state->aliases != NULL)
 		string_array_free(&state->aliases);
+	if (state->commands != NULL)
+		string_array_free(&state->commands);
 
 	free(state);
 	state = NULL;

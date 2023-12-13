@@ -14,7 +14,6 @@
 int main(int argc, char **argv)
 {
 	struct State *state = get_state();
-	int status;
 
 	if (argc >= 2)
 	{
@@ -23,7 +22,10 @@ int main(int argc, char **argv)
 		{
 			fprintf(stdout, "%s: 0: Can't open %s\n", argv[0], argv[1]);
 			free_state();
-			return (127);
+			if (errno == EACCES)
+				return (126);
+			if (errno == ENOENT)
+				return (127);
 		}
 	}
 	else
@@ -34,12 +36,10 @@ int main(int argc, char **argv)
 
 	state->name = argv[0];
 	state->env = string_array_copy(environ);
-	inc_shlvl();
 
 	while (handle_input())
 		;
 
-	status = state->status;
 	free_state();
-	return (status);
+	return (0);
 }

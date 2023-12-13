@@ -51,9 +51,9 @@ char *get_exec_path(const char *command)
 	char *path_copy = NULL;
 
 	if ((command[0] == '/' || command[0] == '.') && is_path_accessible(command))
-		return (_strdup(command));
+		return (strdup(command));
 
-	path_env = _strdup(get_env("PATH"));
+	path_env = strdup(get_env("PATH"));
 	if (path_env == NULL)
 		return (NULL);
 
@@ -61,7 +61,7 @@ char *get_exec_path(const char *command)
 
 	while (path)
 	{
-		path_copy = _strdup(path);
+		path_copy = strdup(path);
 		string_cat(&path_copy, "/");
 		string_cat(&path_copy, command);
 
@@ -84,39 +84,40 @@ char *get_exec_path(const char *command)
  *
  * @argv: argument vector
  *
- * Return: 0 on success, otherwise -1
+ * Return: status
  */
 
 int execute(char **argv)
 {
 	pid_t cpid;
-	int status;
+	int status = 0;
 	char *path = get_exec_path(argv[0]);
 
 	if (path == NULL)
 	{
-		dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", get_state()->name,
+		fprintf(stderr, "%s: %lu: %s: not found\n", get_state()->name,
 				get_state()->count, argv[0]);
-
 		return (127);
 	}
 
 	if (is_dir(path))
 	{
-		dprintf(STDERR_FILENO, "%s: %lu: %s: Permission denied\n",
-				get_state()->name, get_state()->count, argv[0]);
+		fprintf(stderr, "%s: %lu: %s: Permission denied\n", get_state()->name,
+				get_state()->count, argv[0]);
 		free(path);
 		return (127);
 	}
 
 	cpid = fork();
 	if (cpid == -1)
-		perror("fork"), free(path), exit(1);
+		perror("fork"), free(path), string_array_free(&argv), free_state(),
+			exit(1);
 
 	if (cpid == 0)
 	{
 		if (execve(path, argv, get_state()->env) == -1)
-			perror("execve"), string_array_free(&argv), free(path), exit(1);
+			perror("execve"), free(path), string_array_free(&argv),
+				free_state(), exit(1);
 	}
 	else
 	{

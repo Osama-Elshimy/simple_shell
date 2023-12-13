@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <ctype.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <malloc.h>
 #include <stdbool.h>
@@ -27,7 +28,7 @@
  * @status: program exit status
  * @env: program environment
  * @aliases: program aliases
- *
+ * @commands: program commands
  */
 
 struct State
@@ -39,6 +40,7 @@ struct State
 	int status;
 	char **env;
 	char **aliases;
+	char **commands;
 };
 
 struct State *get_state(void);
@@ -116,23 +118,13 @@ char *assemble_alias(const char *name, const char *value);
 
 void handle_commands(char **commands);
 int handle_command(char **argv);
-int builtin_exit(char **argv);
+void builtin_exit(char **argv);
 int builtin_cd(char **argv);
 int builtin_env(void);
 int builtin_alias(char **argv);
 int builtin_setenv(char **argv);
 int builtin_unsetenv(char **argv);
 int execute(char **argv);
-
-/* string functions */
-
-size_t _strlen(const char *str);
-char *_strdup(const char *src);
-char *_strcat(char *dest, const char *src);
-int _strcmp(const char *s1, const char *s2);
-char *_strcpy(char *dest, const char *src);
-int _atoi(char *s);
-int _strncmp(const char *str1, const char *str2, size_t n);
 
 /* string array functions */
 
@@ -142,11 +134,6 @@ void string_array_remove(char ***arr, size_t index);
 char **string_array_copy(char **arr);
 bool string_array_contains(char **arr, const char *string);
 void string_array_free(char ***arr);
-
-/* memory functions */
-
-void *_realloc(void *ptr, size_t size);
-void *_calloc(unsigned int nmemb, unsigned int size);
 
 /* utility functions */
 

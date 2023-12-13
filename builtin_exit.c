@@ -4,26 +4,34 @@
  * builtin_exit - exits the shell
  *
  * @argv: argument vector
- *
- * Return: 2 on failure
  */
 
-int builtin_exit(char **argv)
+void builtin_exit(char **argv)
 {
+	int status = get_state()->status;
+
 	if (argv[1] != NULL)
 	{
-		int status = _atoi(argv[1]);
+		size_t i;
 
-		if (status == 0 && _strcmp(argv[1], "0") != 0)
+		status = atoi(argv[1]);
+
+		for (i = 0; argv[1][i] != '\0'; i++)
 		{
-			fprintf(stderr, "%s: %lu: exit: Illegal number: %s\n",
-					get_state()->name, get_state()->count, argv[1]);
+			if (i == 0 && argv[1][i] == '+')
+				continue;
 
-			return (2);
+			if (!isdigit(argv[1][i]))
+			{
+				fprintf(stderr, "%s: %lu: exit: Illegal number: %s\n",
+						get_state()->name, get_state()->count, argv[1]);
+				status = 2;
+				break;
+			}
 		}
-
-		exit(status);
 	}
 
-	exit(get_state()->status);
+	free_state();
+	string_array_free(&argv);
+	exit(status);
 }

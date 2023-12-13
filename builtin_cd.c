@@ -71,7 +71,7 @@ int builtin_cd(char **argv)
 {
 	if (argv[1] == NULL)
 		return (change_dir(get_env("HOME")));
-	else if (_strcmp(argv[1], "-") == 0)
+	else if (strcmp(argv[1], "-") == 0)
 		return (cd_old_dir());
 	else
 		return (change_dir(argv[1]));

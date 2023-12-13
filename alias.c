@@ -11,7 +11,12 @@
 char *get_alias(const char *name)
 {
 	char **aliases = get_state()->aliases;
-	int alias_index = get_alias_index(name);
+	int alias_index;
+
+	if (name == NULL || *name == '\0')
+		return (NULL);
+
+	alias_index = get_alias_index(name);
 
 	if (alias_index == -1)
 		return (NULL);
@@ -31,12 +36,13 @@ char *get_alias(const char *name)
 int set_alias(const char *name, const char *value)
 {
 	char **aliases = get_state()->aliases;
-	int alias_index = get_alias_index(name);
+	int alias_index;
 	char *new_alias;
 
-	if (name == NULL || strlen(name) == 0 || strchr(name, '=') != NULL)
+	if (name == NULL || *name == '\0' || strchr(name, '=') != NULL)
 		return (-1);
 
+	alias_index = get_alias_index(name);
 	new_alias = assemble_alias(name, value);
 
 	if (alias_index != -1)

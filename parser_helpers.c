@@ -53,10 +53,21 @@ char *cut_first_token(char *string)
 	if (string == NULL)
 		return (NULL);
 
-	string_copy = _strdup(string);
+	string_copy = strdup(string);
+	if (string_copy == NULL)
+		return (NULL);
 	token = _strtok(string_copy, " \t\n");
-
-	cut_string = _strdup(string + _strlen(token));
+	if (token == NULL)
+	{
+		free(string_copy);
+		return (NULL);
+	}
+	cut_string = strdup(string + strlen(token));
+	if (cut_string == NULL)
+	{
+		free(string_copy);
+		return (NULL);
+	}
 
 	free(string_copy);
 	return (cut_string);
@@ -78,8 +89,21 @@ char *get_first_token(char *string)
 	if (string == NULL)
 		return (NULL);
 
-	string_copy = _strdup(string);
-	token = _strdup(_strtok(string_copy, " \t\n"));
+	string_copy = strdup(string);
+	if (string_copy == NULL)
+		return (NULL);
+	token = _strtok(string_copy, " \t\n");
+	if (token == NULL)
+	{
+		free(string_copy);
+		return (NULL);
+	}
+	token = strdup(token);
+	if (token == NULL)
+	{
+		free(string_copy);
+		return (NULL);
+	}
 
 	free(string_copy);
 	return (token);

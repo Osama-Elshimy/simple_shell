@@ -11,8 +11,12 @@
 char *get_env(const char *name)
 {
 	char **env = get_state()->env;
-	int env_index = get_env_index(name);
+	int env_index;
 
+	if (name == NULL || *name == '\0')
+		return (NULL);
+
+	env_index = get_env_index(name);
 	if (env_index == -1)
 		return (NULL);
 
@@ -31,13 +35,14 @@ char *get_env(const char *name)
 int set_env(const char *name, const char *value)
 {
 	char **env = get_state()->env;
-	int env_index = get_env_index(name);
+	int env_index;
 	char *new_env;
 
 	if (!is_valid_env(name) || value == NULL)
 		return (-1);
 
 	new_env = assemble_env(name, value);
+	env_index = get_env_index(name);
 
 	if (env_index != -1)
 	{

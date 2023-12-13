@@ -19,7 +19,7 @@ char *parse_comments(const char *string)
 	while (string[i] != '\0')
 	{
 		if (string[i] == '#' &&
-			(_strlen(parsed_string) == 0 || isspace(string[i - 1])))
+			(strlen(parsed_string) == 0 || isspace(string[i - 1])))
 			break;
 
 		string_cat_char(&parsed_string, string[i++]);
@@ -159,9 +159,8 @@ char **parse_command(const char *string)
 				free(token), free(string_literal), string_array_free(&tokens);
 				return (NULL);
 			}
-			i += _strlen(string_literal) + 2,
-				string_cat(&token, string_literal), push_token(&tokens, &token),
-				free(string_literal);
+			i += strlen(string_literal) + 2, string_cat(&token, string_literal),
+				push_token(&tokens, &token), free(string_literal);
 			continue;
 		}
 		if (isspace(string[i]))
@@ -207,7 +206,7 @@ char *parse_aliases(const char *string)
 		token = get_first_token(commands[i]);
 		alias = get_alias(token);
 		check = get_first_token(alias);
-		if (token != NULL && check != NULL && _strcmp(token, check) == 0)
+		if (token != NULL && check != NULL && strcmp(token, check) == 0)
 		{
 			free(token), free(check), string_array_free(&commands);
 			return (strdup(alias));

@@ -14,18 +14,16 @@
 int main(int argc, char **argv)
 {
 	struct State *state = get_state();
+	int status;
 
 	if (argc >= 2)
 	{
 		state->fd = open(argv[1], O_RDONLY);
 		if (state->fd == -1)
 		{
-			fprintf(stdout, "%s: 0: Can't open %s\n", argv[0], argv[1]);
+			fprintf(stderr, "%s: 0: Can't open %s\n", argv[0], argv[1]);
 			free_state();
-			if (errno == EACCES)
-				return (126);
-			if (errno == ENOENT)
-				return (127);
+			return (127);
 		}
 	}
 	else
@@ -40,6 +38,7 @@ int main(int argc, char **argv)
 	while (handle_input())
 		;
 
+	status = state->status;
 	free_state();
-	return (0);
+	return (status);
 }

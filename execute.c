@@ -50,10 +50,17 @@ char *get_exec_path(const char *command)
 	char *path = NULL;
 	char *path_copy = NULL;
 
+	if (command == NULL || *command == '\0')
+		return (NULL);
+
 	if ((command[0] == '/' || command[0] == '.') && is_path_accessible(command))
 		return (strdup(command));
 
-	path_env = strdup(get_env("PATH"));
+	path_env = get_env("PATH");
+	if (path_env == NULL)
+		return (NULL);
+
+	path_env = strdup(path_env);
 	if (path_env == NULL)
 		return (NULL);
 

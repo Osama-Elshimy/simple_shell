@@ -1,5 +1,7 @@
 #include "main.h"
 
+#define CD_BUFFER_SIZE 1024
+
 /**
  * change_dir - changes the current working directory
  *
@@ -10,31 +12,28 @@
 
 static int change_dir(char *new_dir)
 {
-	char *current_dir = getcwd(NULL, 0);
+	char current_dir[CD_BUFFER_SIZE];
 
-	if (current_dir == NULL)
+	if (getcwd(current_dir, CD_BUFFER_SIZE) == NULL)
 	{
 		perror("getcwd");
-		exit(1);
+		return (1);
 	}
 
 	if (new_dir == NULL)
-		new_dir = ".";
+		new_dir = current_dir;
 
-	if (chdir(new_dir) == 0)
-	{
-		set_env("OLDPWD", current_dir);
-		set_env("PWD", new_dir);
-		free(current_dir);
-		return (0);
-	}
-	else
+	if (chdir(new_dir) == -1)
 	{
 		fprintf(stderr, "%s: %lu: cd: can't cd to %s\n", get_state()->name,
 				get_state()->count, new_dir);
-		free(current_dir);
 		return (2);
 	}
+
+	set_env("PWD", new_dir);
+	set_env("OLDPWD", current_dir);
+
+	return (0);
 }
 
 /**
@@ -49,13 +48,19 @@ static int cd_old_dir(void)
 
 	if (old_dir == NULL)
 	{
-		char *current_dir = get_env("PWD");
+		char current_dir[CD_BUFFER_SIZE];
 
-		set_env("OLDPWD", current_dir);
-		old_dir = current_dir;
+		if (getcwd(current_dir, CD_BUFFER_SIZE) == NULL)
+		{
+			perror("getcwd");
+			return (1);
+		}
+
+		printf("%s\n", current_dir);
 	}
+	else
+		printf("%s\n", old_dir);
 
-	printf("%s\n", old_dir);
 	return (change_dir(old_dir));
 }
 

@@ -18,8 +18,7 @@ char *parse_comments(const char *string)
 
 	while (string[i] != '\0')
 	{
-		if (string[i] == '#' &&
-			(strlen(parsed_string) == 0 || isspace(string[i - 1])))
+		if (string[i] == '#' && (i == 0 || isspace(string[i - 1])))
 			break;
 
 		string_cat_char(&parsed_string, string[i++]);

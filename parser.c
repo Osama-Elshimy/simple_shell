@@ -97,6 +97,24 @@ char **parse_operators(const char *string)
 
 	while (string[i] != '\0')
 	{
+		if (string[i] == '"' || string[i] == '\'')
+		{
+			char *string_literal = parse_delimiter(string + i, string[i]);
+
+			if (string_literal == NULL)
+			{
+				free(token), free(string_literal), string_array_free(&tokens);
+				return (NULL);
+			}
+
+			string_cat_char(&token, string[i]);
+			string_cat(&token, string_literal);
+			string_cat_char(&token, string[i]);
+
+			i += strlen(string_literal) + 2;
+			free(string_literal);
+			continue;
+		}
 		if (string[i] == '&' && string[i + 1] == '&')
 		{
 			push_token(&tokens, &token);
